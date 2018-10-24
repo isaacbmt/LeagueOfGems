@@ -42,7 +42,7 @@ int main(int argc, char **argv){
     al_start_timer(drawTimer);
 
     Game *game = new Game;
-    int x = 100, y = 100;
+    int x = 1150, y = 850;
 
     ALLEGRO_BITMAP *f = al_load_bitmap("sprite.png");
 
@@ -58,17 +58,28 @@ int main(int argc, char **argv){
             if (events.timer.source == timer)
             {
                 // Update
-                //game->update();
-                ALLEGRO_MOUSE_STATE state;
+                game->update(x, y);
 
+                ALLEGRO_MOUSE_STATE state;
                 al_get_mouse_state(&state);
+
                 if (state.buttons & 1) {
-                    /* Primary (e.g. left) mouse button is held. */
-                    x=state.x;
+                    x = state.x;
                     y = state.y;
                 }
+                else if (state.buttons & 2) {
+                    // Pathfinding
+                    x = state.x;
+                    y = state.y;
 
-                cout << "x: " << x << "\ny: " << y << endl;
+                    cout << "Pathfindeo" << endl;
+
+                    int posx = x / 50;
+                    int posy = y / 50;
+
+                    cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
+                }
+
                 if (events.type == ALLEGRO_EVENT_MOUSE_AXES ){
                     x = events.mouse.x;
                     y = events.mouse.y;
@@ -79,7 +90,7 @@ int main(int argc, char **argv){
             {
                 // Draw
                 al_clear_to_color(al_map_rgb(62, 240, 98));
-                game->draw(x, y);
+                game->draw();
                 //al_draw_bitmap(f, x, y, 0);
                 al_flip_display();
             }

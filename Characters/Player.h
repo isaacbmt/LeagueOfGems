@@ -10,10 +10,14 @@ private:
     ALLEGRO_BITMAP *image;
     int x;
     int y;
+    int down;
+    int times;
+
 public:
     Player(std::string);
     Player(int, int, std::string);
-    void draw(int, int);
+    void draw();
+    void update(int, int);
 };
 
 

@@ -8,14 +8,15 @@ class Game {
 private:
     LinkedList<Player> *playersList;
     Player *player;
+    int map[21][27];
 
     void createPlayers();
     void createMap();
 
 public:
     Game();
-    void update();
-    void draw(int, int);
+    void update(int, int);
+    void draw();
     ~Game();
 };
 
