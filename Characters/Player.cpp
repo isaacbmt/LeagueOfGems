@@ -15,6 +15,7 @@ Player::Player(int x, int y, std::string image) {
     this->x = x;
     this->y = y;
     this->down = 0;
+    this->times = 0;
 }
 
 void Player::update(int dx, int dy) {
@@ -22,9 +23,9 @@ void Player::update(int dx, int dy) {
     y = dy;
 }
 
-
 void Player::draw() {
     al_draw_bitmap_region(image, 50 * down, 50 * 0, 50, 50, x, y, 0);
+
     times += 1;
     if (times % 7 == 0){
         down += 1;
@@ -33,4 +34,8 @@ void Player::draw() {
             down = 0;
         }
     }
+}
+
+Player::~Player() {
+    al_destroy_bitmap(image);
 }

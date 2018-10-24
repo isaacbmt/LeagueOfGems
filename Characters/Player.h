@@ -16,8 +16,9 @@ private:
 public:
     Player(std::string);
     Player(int, int, std::string);
-    void draw();
     void update(int, int);
+    void draw();
+    ~Player();
 };
 
 

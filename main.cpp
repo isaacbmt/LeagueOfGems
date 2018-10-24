@@ -44,7 +44,7 @@ int main(int argc, char **argv){
     Game *game = new Game;
     int x = 1150, y = 850;
 
-    ALLEGRO_BITMAP *f = al_load_bitmap("sprite.png");
+    ALLEGRO_BITMAP *horse = al_load_bitmap("../resources/horse.png");
 
     while (!running){
         ALLEGRO_EVENT events;
@@ -91,7 +91,7 @@ int main(int argc, char **argv){
                 // Draw
                 al_clear_to_color(al_map_rgb(62, 240, 98));
                 game->draw();
-                //al_draw_bitmap(f, x, y, 0);
+                //al_draw_bitmap(horse, (1350 / 2) - 105, (1050 / 2) - 130, 0);
                 al_flip_display();
             }
         }
