@@ -111,7 +111,7 @@ void Dijkstra::definirPesos(int x, int y){
         }
         if(definirCentro(x,y)) {
             Vertice aux;
-            for(int i = 0; i < 20; i++) {
+            for(int i = 0; i < 25; i++) {
                 for (int i = 0; i < verticesPendientes->size(); i++) {
                     aux = verticesPendientes->operator[](i);
                     if (aux.distancia != INF) {
