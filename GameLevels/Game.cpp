@@ -7,13 +7,14 @@ Game::Game() {
     enemyList = new LinkedList<Enemy *>;
     player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
+    level = 1;
 
     createMap();
+
+    dij = Dijkstra(map);// A esta clase nadamas se le debe pazar la matriz del mapa al iniciarla
 }
 
 void Game::update(int x, int y) {
-    int posx = x / 50, posy = y / 50;
-
     player->update(x, y);
 
     for (int i = 0; i < enemyList->length(); ++i) {
@@ -35,6 +36,15 @@ void Game::update(int x, int y) {
                 player->attacking(enemyList->get(i), 1, 1);
         }
     }
+}
+
+void Game::updateCenter(int x, int y){
+    int xPlayer,yPlayer;
+    xPlayer = player->getPosx();//posicion actual del jugador
+    yPlayer = player->getPosy();
+    dij.definirPesos(x,y);//define los pesos a partir del nodo que se clickeo
+    dij.definirRutaOptima(xPlayer,yPlayer);//define la ruta desde el la posicion inicial del personaje
+
 }
 
 void Game::draw() {
