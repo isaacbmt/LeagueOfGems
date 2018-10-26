@@ -29,7 +29,7 @@ int main(int argc, char **argv){
     al_install_keyboard();
 
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / 60);
-    ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 30);
+    ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 60);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -37,7 +37,7 @@ int main(int argc, char **argv){
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_timer_event_source(drawTimer));
 
-
+    al_hide_mouse_cursor(display);
     al_start_timer(timer);
     al_start_timer(drawTimer);
 

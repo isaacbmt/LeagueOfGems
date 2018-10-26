@@ -12,16 +12,38 @@ Game::Game() {
 }
 
 void Game::update(int x, int y) {
+    int posx = x / 50, posy = y / 50;
+
     player->update(x, y);
+
+    for (int i = 0; i < enemyList->length(); ++i) {
+
+        if (map[player->getPosy()][player->getPosx() - 1] == 3) {
+            if (!player->isAttacking())
+                player->attacking(enemyList->get(i), 3, 0);
+        }
+        else if (map[player->getPosy()][player->getPosx() + 1] == 3) {
+            if (!player->isAttacking())
+                player->attacking(enemyList->get(i), 1, 0);
+        }
+        else if (map[player->getPosy() - 1][player->getPosx()] == 3) {
+            if (!player->isAttacking())
+                player->attacking(enemyList->get(i), 3, 1);
+        }
+        else if (map[player->getPosy() + 1][player->getPosx()] == 3) {
+            if (!player->isAttacking())
+                player->attacking(enemyList->get(i), 1, 1);
+        }
+    }
 }
 
 void Game::draw() {
     drawMap();
-    player->draw();
 
     for (int i = 0; i < enemyList->length(); ++i) {
         enemyList->get(i)->draw();
     }
+    player->draw();
 }
 
 void Game::createPlayers() {
@@ -54,7 +76,7 @@ void Game::createMap() {
 
             if(random > 90 && enemys != 0){
                 map[dj][di] = 3;
-                enemyList->add(new Enemy(di * 50, dj * 50, "../resources/enemy1.png"));
+                enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
                 enemys -= 1;
             }
             else if (random > 81){

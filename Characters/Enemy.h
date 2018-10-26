@@ -7,8 +7,9 @@
 
 class Enemy {
 private:
-    int x;
-    int y;
+    int posx;
+    int posy;
+    int life = 3;
     ALLEGRO_BITMAP *image;
 
 public:
@@ -16,6 +17,7 @@ public:
     Enemy(int, int, std::string);
     void update(int, int);
     void draw();
+    void getDamage();
     ~Enemy();
 };
 

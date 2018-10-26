@@ -4,20 +4,30 @@
 #include <allegro5/bitmap.h>
 #include <allegro5/allegro_image.h>
 #include <string>
+#include "Enemy.h"
+#include "math.h"
 
 class Player {
 private:
     ALLEGRO_BITMAP *image;
-    int x;
-    int y;
+    ALLEGRO_BITMAP *imgAttack;
+    int x, y;
     int down;
-    int times;
+    int attackX, attackY;
+    bool attack;
+    int animationTimer;
+    int life;
 
 public:
     Player(std::string);
     Player(int, int, std::string);
     void update(int, int);
     void draw();
+    int getPosx();
+    int getPosy();
+    void attacking(Enemy *, int, int);
+    bool isAttacking();
+    void timer();
     ~Player();
 };
 
