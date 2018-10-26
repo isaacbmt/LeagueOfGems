@@ -29,7 +29,7 @@ int main(int argc, char **argv){
     al_install_keyboard();
 
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / 60);
-    ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 30);
+    ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 150);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -66,6 +66,7 @@ int main(int argc, char **argv){
                 if (state.buttons & 1) {
                     x = state.x;
                     y = state.y;
+
                 }
                 else if (state.buttons & 2) {
                     // Pathfinding
@@ -78,6 +79,9 @@ int main(int argc, char **argv){
                     int posy = y / 50;
 
                     cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
+
+                    game->updateCenter(posx,posy);//Aqui se recalcula el nodo al que tiene q llegar el personaje
+
                 }
 
                 if (events.type == ALLEGRO_EVENT_MOUSE_AXES ){
