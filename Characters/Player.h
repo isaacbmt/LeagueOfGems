@@ -18,6 +18,8 @@ public:
     Player(int, int, std::string);
     void update(int, int);
     void draw();
+    int getX(); //Añadi estos dos metodos
+    int getY();
     ~Player();
 };
 

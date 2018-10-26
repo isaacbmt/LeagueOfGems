@@ -36,6 +36,14 @@ void Player::draw() {
     }
 }
 
+int Player::getX() {
+    return this->x;
+}
+
+int Player:: getY(){
+    return this->y;
+}
+
 Player::~Player() {
     al_destroy_bitmap(image);
 }
