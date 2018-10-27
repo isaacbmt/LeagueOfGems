@@ -7,7 +7,7 @@
 Player::Player(std::string image) {
     this->image = al_load_bitmap(image.c_str());
     this->imgAttack = al_load_bitmap("../resources/swordsheet.png");
-    this->down = 0;
+    this->movement = 0;
     this->animationTimer = 0;
     this->life = 3;
     attack = false;
@@ -18,13 +18,23 @@ Player::Player(int x, int y, std::string image) {
     this->imgAttack = al_load_bitmap("../resources/swordsheet.png");
     this->x = x;
     this->y = y;
-    this->down = 0;
+    this->movement = 0;
     this->animationTimer = 0;
     this->life = 3;
     attack = false;
 }
 
-void Player::update(int dx, int dy) {
+void Player::update(int dx, int dy)
+{
+    if (dx - x < 0)
+        direction = 1;
+    else if (dx - x > 0)
+        direction = 2;
+    else if (dy- y < 0)
+        direction = 3;
+    else if (dy - y > 0)
+        direction = 0;
+
     x = dx;
     y = dy;
 }
@@ -50,7 +60,8 @@ void Player::draw() {
         }
     }
 
-    al_draw_bitmap_region(image, 50 * down, 50 * 1, 50, 50, x, y, 0);
+
+    al_draw_bitmap_region(image, 50 * movement, 50 * direction, 50, 50, x, y, 0);
 
     timer();
 }
@@ -60,14 +71,14 @@ void Player::timer(){
 
     if (animationTimer % 20 == 0)
     {
-        if (attackX % 2 == 0){
+        if (attackX % 2 == 0 ){
             attack = false;
         }
         attackX --;
 
-        down += 1;
-        if (down == 3){
-            down = 0;
+        movement += 1;
+        if (movement == 3){
+            movement = 0;
         }
     }
 }

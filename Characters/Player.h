@@ -12,7 +12,8 @@ private:
     ALLEGRO_BITMAP *image;
     ALLEGRO_BITMAP *imgAttack;
     int x, y;
-    int down;
+    int direction;
+    int movement;
     int attackX, attackY;
     bool attack;
     int animationTimer;

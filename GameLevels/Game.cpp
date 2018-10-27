@@ -7,6 +7,7 @@ Game::Game() {
     enemyList = new LinkedList<Enemy *>;
     player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
+    animationTimer = 0;
     level = 1;
 
     createMap();
@@ -15,7 +16,30 @@ Game::Game() {
 }
 
 void Game::update(int x, int y) {
-    player->update(x, y);
+    int nextX, nextY;
+
+//    Vertice next = dij.obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
+//    nextX = (next.posicionXtiles) * 50;
+//    nextY = (next.posicionYtiles) * 50;
+
+    if (animationTimer % 15 == 0) {
+        Vertice next = dij.obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
+        nextX = (next.posicionXtiles) * 50;
+        nextY = (next.posicionYtiles) * 50;
+    } else {
+        nextX = player->getPosx() * 50;
+        nextY = player->getPosy() * 50;
+    }
+
+    cout << "X: " << nextX << " Y: " << nextY << endl;
+
+    animationTimer++;
+
+    if(nextX != -50) {
+        player->update(nextX, nextY);
+    } else {
+        player->update(x * 50, y * 50);
+    }
 
     for (int i = 0; i < enemyList->length(); ++i) {
 
@@ -44,7 +68,6 @@ void Game::updateCenter(int x, int y){
     yPlayer = player->getPosy();
     dij.definirPesos(x,y);//define los pesos a partir del nodo que se clickeo
     dij.definirRutaOptima(xPlayer,yPlayer);//define la ruta desde el la posicion inicial del personaje
-
 }
 
 void Game::draw() {

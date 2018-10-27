@@ -15,6 +15,7 @@ private:
     int map[21][27];
     Dijkstra dij = Dijkstra();//Agregue esta variable
     int level;
+    int animationTimer;
 
     void createPlayers();
     void drawMap();
