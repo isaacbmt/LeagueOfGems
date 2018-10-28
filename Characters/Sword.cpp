@@ -5,6 +5,7 @@
 
 Sword::Sword(Enemy* enemy, int x, int y, int attX, int attY) {
     this->sword = al_load_bitmap("../resources/swordsheet.png");
+
     this->x = x;
     this->y = y;
     this->attack = true;
@@ -13,14 +14,15 @@ Sword::Sword(Enemy* enemy, int x, int y, int attX, int attY) {
 
     if (enemy != nullptr)
         enemy->getDamage();
-}
+    }
 
-void Sword::draw() {
-    if (attack) {
-        al_install_audio();
-        al_init_acodec_addon();
+    void Sword::draw() {
+        if (attack) {
         ALLEGRO_SAMPLE *soundSword = al_load_sample("../resources/Espadazo.wav");
         al_reserve_samples(1);
+        al_play_sample(soundSword, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0 );
+
+
         if (attackX > 1 && attackY == 0){
             al_draw_bitmap_region(sword, 50 * attackX, 50 * attackY, 50, 50, x,
                                   y, 0);
@@ -42,11 +44,13 @@ void Sword::draw() {
 }
 
 bool Sword::isAttacking() {
+
     return attack;
 }
 
 void Sword::timer(){
     animationTimer += 1;
+
 
     if (animationTimer % 22 == 0)
     {
@@ -59,4 +63,5 @@ void Sword::timer(){
 
 Sword::~Sword() {
     al_destroy_bitmap(sword);
+
 }

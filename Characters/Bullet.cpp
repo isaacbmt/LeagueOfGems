@@ -17,6 +17,12 @@ Bullet::Bullet(Player *player, int lastX, int lastY) {
     this->y = lastY;
     this->timer = 0;
 
+    ALLEGRO_SAMPLE *soundArrow = al_load_sample("../resources/Arrow.wav");
+    al_reserve_samples(1);
+
+    al_play_sample(soundArrow, 1.0, 0.0, 2.0, ALLEGRO_PLAYMODE_ONCE, 0 );
+
+
     if (x - xi > 0)
         direction = 2;
     else if (x - xi < 0)
@@ -30,11 +36,7 @@ Bullet::Bullet(Player *player, int lastX, int lastY) {
 }
 
 void Bullet::draw() {
-    al_install_audio();
-    al_init_acodec_addon();
 
-    ALLEGRO_SAMPLE *soundArrow = al_load_sample("../resources/Arrow.wav");
-    al_reserve_samples(1);
     int exp = 4 * int(pow((-1), direction));
 
     if (timer == 0)
@@ -46,7 +48,6 @@ void Bullet::draw() {
         xi = xi + exp;
 
     al_draw_bitmap_region(arrow, 0, 50 * direction, 50, 50, xi, yi, 0);
-    al_play_sample(soundArrow, 1.0, 0.0, 1.5, ALLEGRO_PLAYMODE_ONCE, 0 );
 
 
 
