@@ -4,6 +4,10 @@
 #include <allegro5/allegro_primitives.h>
 #include <iostream>
 #include "GameLevels/Game.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+
+
 
 int main(int argc, char **argv){
     ALLEGRO_DISPLAY *display;
@@ -28,6 +32,15 @@ int main(int argc, char **argv){
 
     al_install_mouse();
     al_install_keyboard();
+    al_install_audio();
+    al_init_acodec_addon();
+
+
+    ALLEGRO_SAMPLE *soundWalk = al_load_sample("../resources/Caminando.wav");
+
+    al_reserve_samples(1);
+
+
 
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / 30);
     ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 60);
@@ -66,6 +79,8 @@ int main(int argc, char **argv){
                 if (state.buttons & 1) {
                     x = state.x;
                     y = state.y;
+                    //al_play_sample(soundWalk, 1.0, 0.0, 1.5, ALLEGRO_PLAYMODE_ONCE, 0 ); SONIDO CAMINANDO
+
                 }
                 else if (state.buttons & 2) {
                     // GreedyAlgorithms
@@ -102,6 +117,7 @@ int main(int argc, char **argv){
     al_destroy_display(display);
     al_uninstall_mouse();
     al_uninstall_keyboard();
+    al_destroy_sample(soundWalk);
     al_destroy_event_queue(event_queue);
     return 0;
 }

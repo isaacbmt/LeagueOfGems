@@ -1,6 +1,12 @@
 #include <allegro5/allegro.h>
 #include <cmath>
 #include "Bullet.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+
+
+
+
 
 Bullet::Bullet(Player *player, int lastX, int lastY) {
     this->arrow = al_load_bitmap("../resources/bowsprite.png");
@@ -24,6 +30,11 @@ Bullet::Bullet(Player *player, int lastX, int lastY) {
 }
 
 void Bullet::draw() {
+    al_install_audio();
+    al_init_acodec_addon();
+
+    ALLEGRO_SAMPLE *soundArrow = al_load_sample("../resources/Arrow.wav");
+    al_reserve_samples(1);
     int exp = 4 * int(pow((-1), direction));
 
     if (timer == 0)
@@ -35,6 +46,10 @@ void Bullet::draw() {
         xi = xi + exp;
 
     al_draw_bitmap_region(arrow, 0, 50 * direction, 50, 50, xi, yi, 0);
+    al_play_sample(soundArrow, 1.0, 0.0, 1.5, ALLEGRO_PLAYMODE_ONCE, 0 );
+
+
+
 
     if (x - xi == 0 && y - yi == 0)
         timer = 1;
@@ -52,3 +67,4 @@ int Bullet::getY() {
 int Bullet::getTimer() {
     return timer;
 }
+

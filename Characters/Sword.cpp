@@ -1,5 +1,7 @@
 #include <allegro5/allegro.h>
 #include "Sword.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 Sword::Sword(Enemy* enemy, int x, int y, int attX, int attY) {
     this->sword = al_load_bitmap("../resources/swordsheet.png");
@@ -15,6 +17,10 @@ Sword::Sword(Enemy* enemy, int x, int y, int attX, int attY) {
 
 void Sword::draw() {
     if (attack) {
+        al_install_audio();
+        al_init_acodec_addon();
+        ALLEGRO_SAMPLE *soundSword = al_load_sample("../resources/Espadazo.wav");
+        al_reserve_samples(1);
         if (attackX > 1 && attackY == 0){
             al_draw_bitmap_region(sword, 50 * attackX, 50 * attackY, 50, 50, x,
                                   y, 0);
