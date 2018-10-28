@@ -5,6 +5,8 @@
 Game::Game() {
     playersList = new LinkedList<Player *>;
     enemyList = new LinkedList<Enemy *>;
+    explosionList = new LinkedList<Explosion *>;
+
     player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
     animationTimer = 0;
@@ -18,10 +20,6 @@ Game::Game() {
 void Game::update(int x, int y) {
     int nextX, nextY;
 
-//    Vertice next = dij.obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
-//    nextX = (next.posicionXtiles) * 50;
-//    nextY = (next.posicionYtiles) * 50;
-
     if (animationTimer % 15 == 0) {
         Vertice next = dij.obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
         nextX = (next.posicionXtiles) * 50;
@@ -30,8 +28,6 @@ void Game::update(int x, int y) {
         nextX = player->getPosx() * 50;
         nextY = player->getPosy() * 50;
     }
-
-    cout << "X: " << nextX << " Y: " << nextY << endl;
 
     animationTimer++;
 
@@ -42,24 +38,50 @@ void Game::update(int x, int y) {
     }
 
     for (int i = 0; i < enemyList->length(); ++i) {
+        int playerY = player->getPosy();
+        int playerX = player->getPosx();
 
-        if (map[player->getPosy()][player->getPosx() - 1] == 3) {
+        if (map[playerY][playerX - 1] == 3) {
             if (!player->isAttacking())
-                player->attacking(enemyList->get(i), 3, 0);
+                player->attacking(searchEnemy(playerX - 1, playerY), 3, 0);
         }
-        else if (map[player->getPosy()][player->getPosx() + 1] == 3) {
+        else if (map[playerY][playerX + 1] == 3) {
             if (!player->isAttacking())
-                player->attacking(enemyList->get(i), 1, 0);
+                player->attacking(searchEnemy(playerX + 1, playerY), 1, 0);
         }
-        else if (map[player->getPosy() - 1][player->getPosx()] == 3) {
+        else if (map[playerY - 1][playerX] == 3) {
             if (!player->isAttacking())
-                player->attacking(enemyList->get(i), 3, 1);
+                player->attacking(searchEnemy(playerX, playerY - 1), 3, 1);
         }
-        else if (map[player->getPosy() + 1][player->getPosx()] == 3) {
+        else if (map[playerY + 1][playerX] == 3) {
             if (!player->isAttacking())
-                player->attacking(enemyList->get(i), 1, 1);
+                player->attacking(searchEnemy(playerX, playerY + 1), 1, 1);
+        }
+
+        if (enemyList->get(i)->getLife() <= 0){
+            int enemyX = enemyList->get(i)->getPosx();
+            int enemyY = enemyList->get(i)->getPosy();
+            map[enemyY][enemyX] = 0;
+            explosionList->add(new Explosion(enemyX, enemyY));
+
+            enemyList->remove(i);
         }
     }
+
+    for (int j = 0; j < explosionList->length(); ++j) {
+        if (explosionList->get(j)->getPivotY() == 2)
+            explosionList->remove(j);
+    }
+}
+
+Enemy *Game::searchEnemy(int x, int y) {
+    for (int i = 0; i < enemyList->length(); ++i) {
+        if (enemyList->get(i)->getPosx() == x && enemyList->get(i)->getPosy() == y){
+            return enemyList->get(i);
+        }
+    }
+
+    return nullptr;
 }
 
 void Game::updateCenter(int x, int y){
@@ -74,8 +96,14 @@ void Game::draw() {
     drawMap();
 
     for (int i = 0; i < enemyList->length(); ++i) {
-        enemyList->get(i)->draw();
+        if (enemyList->get(i) != nullptr)
+            enemyList->get(i)->draw();
     }
+
+    for (int j = 0; j < explosionList->length(); ++j) {
+        explosionList->get(j)->draw();
+    }
+
     player->draw();
 }
 
@@ -107,7 +135,7 @@ void Game::createMap() {
         for (int di = 0; di < 27; di++) {
             random = std::rand() % 100;
 
-            if(random > 90 && enemys != 0){
+            if(random > 90 && enemys != 0 && dj != 0){
                 map[dj][di] = 3;
                 enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
                 enemys -= 1;
@@ -126,5 +154,6 @@ Game::~Game(){
     delete player;
     delete playersList;
     delete enemyList;
+    delete explosionList;
     al_destroy_bitmap(tiles);
 }

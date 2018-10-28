@@ -1,7 +1,3 @@
-//
-// Created by luisk on 24/10/18.
-//
-
 #include "Dijkstra.h"
 
 bool Dijkstra::definirCentro(int x,int y){
@@ -22,7 +18,7 @@ bool Dijkstra::definirCentro(int x,int y){
 }
 
 void Dijkstra::evaluarVecinos(int posicionX, int posicionY, double peso){
-    double dist = 0.0;
+    double dist = INF;
     for(int y = posicionY-1; y <= posicionY+1; y++){
         for(int x = posicionX-1; x <= posicionX+1; x++){
             if(y < 0 || x < 0 || y > FilasMapa-1 || x > ColumnasMapa-1){
@@ -34,23 +30,11 @@ void Dijkstra::evaluarVecinos(int posicionX, int posicionY, double peso){
                     if (aux.posicionXtiles == x && aux.posicionYtiles == y) {
                         if(aux.distancia == INF){
                             if(x != posicionX && y != posicionY){
-                                dist = DIAGONAL;
+                                //dist = DIAGONAL;
                             }else{
                                 dist = 1.0;
-                            }
-                            (verticesPendientes->operator[](i)).distancia = peso + dist;
-                        }
-                        else if(!(aux.visitado)){
-                            if(x != posicionX && y != posicionY){
-                                dist = DIAGONAL;
-                            }else{
-                                dist = 1.0;
-                            }
-                            if(peso + dist < aux.distancia) {
                                 (verticesPendientes->operator[](i)).distancia = peso + dist;
                             }
-                        }else{
-
                         }
                     }
                 }
@@ -76,8 +60,10 @@ Vertice Dijkstra::retornarVecinoMenor(int posicionX, int posicionY, double peso)
                     verticeAux2 = verticesPendientes->operator[](i);
                     if (verticeAux2.posicionXtiles == x && verticeAux2.posicionYtiles == y) {
                         if(verticeAux2.distancia < dist){
-                            dist = verticeAux2.distancia;
-                            verticeAux1 = verticeAux2;
+                            if(!(x != posicionX && y != posicionY)) {
+                                dist = verticeAux2.distancia;
+                                verticeAux1 = verticeAux2;
+                            }
                         }
                     }
                 }
@@ -111,7 +97,7 @@ void Dijkstra::definirPesos(int x, int y){
         }
         if(definirCentro(x,y)) {
             Vertice aux;
-            for(int i = 0; i < 25; i++) {
+            for(int i = 0; i < 55; i++) {
                 for (int i = 0; i < verticesPendientes->size(); i++) {
                     aux = verticesPendientes->operator[](i);
                     if (aux.distancia != INF) {
@@ -151,9 +137,11 @@ void Dijkstra::definirRutaOptima(int x, int y) {
         } else {
             ruta->push_back(verticeActual);
             bool flag = true;
+            cout<<"Si es este while"<<endl;
             while (flag) {
                 verticeActual = retornarVecinoMenor(verticeActual.posicionXtiles,
                                                     verticeActual.posicionYtiles, verticeActual.distancia);
+                cout<<verticeActual.distancia<<endl;
                 if (verticeActual.distancia == 0.0) {
                     ruta->push_back(verticeActual);
                     flag = false;
@@ -161,6 +149,7 @@ void Dijkstra::definirRutaOptima(int x, int y) {
                     ruta->push_back(verticeActual);
                 }
             }
+            cout<<"No es este while"<<endl;
         }
 
         cout << "{" << endl;

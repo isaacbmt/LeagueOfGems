@@ -1,8 +1,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 #include <iostream>
-#include <thread>
 #include "GameLevels/Game.h"
 
 int main(int argc, char **argv){
@@ -24,6 +24,7 @@ int main(int argc, char **argv){
     al_set_window_position(display, 600, 500);
 
     al_init_image_addon();
+    al_init_primitives_addon();
 
     al_install_mouse();
     al_install_keyboard();
@@ -36,7 +37,6 @@ int main(int argc, char **argv){
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_timer_event_source(drawTimer));
-
 
     al_start_timer(timer);
     al_start_timer(drawTimer);
@@ -68,7 +68,7 @@ int main(int argc, char **argv){
                     y = state.y;
                 }
                 else if (state.buttons & 2) {
-                    // Pathfinding
+                    // GreedyAlgorithms
                     x = state.x;
                     y = state.y;
 

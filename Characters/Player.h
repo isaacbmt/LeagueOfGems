@@ -17,6 +17,7 @@ private:
     int attackX, attackY;
     bool attack;
     int animationTimer;
+    int maxLife;
     int life;
 
 public:

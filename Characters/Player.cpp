@@ -84,7 +84,8 @@ void Player::timer(){
 }
 
 void Player::attacking(Enemy *enemy, int xdir, int ydir) {
-    enemy->getDamage();
+    if (enemy != nullptr)
+        enemy->getDamage();
 
     if (xdir != -1){
         attackX = xdir;
