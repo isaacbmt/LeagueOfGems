@@ -20,12 +20,12 @@ void Enemy::update(int dx, int dy) {
 void Enemy::draw() {
     al_draw_rectangle(posx * 50 , posy * 50 - 7, posx * 50 + 50, posy * 50 - 2, al_map_rgb(255, 0, 0), 1.0);
     al_draw_filled_rectangle(posx * 50 , posy * 50 - 7, posx * 50 + life, posy * 50 - 2, al_map_rgb(255, 0, 0));
-    std::cout << "hola " << std::endl;
+
     al_draw_bitmap_region(image, 50 * 0, 50 * 0, 50, 50, posx * 50, posy * 50, 0);
 }
 
 void Enemy::getDamage() {
-    life -= 2;
+    life -= 4;
 }
 
 Enemy::~Enemy() {

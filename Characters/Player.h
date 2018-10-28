@@ -20,6 +20,7 @@ private:
     int maxLife;
     int life;
 
+    void timer();
 public:
     Player(std::string);
     Player(int, int, std::string);
@@ -27,9 +28,8 @@ public:
     void draw();
     int getPosx();
     int getPosy();
-    void attacking(Enemy *, int, int);
+    void attacking();
     bool isAttacking();
-    void timer();
     ~Player();
 };
 

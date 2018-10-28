@@ -6,18 +6,24 @@
 #include "../Characters/Enemy.h"
 #include "../GreedyAlgorithms/Dijkstra.h"
 #include "../Characters/Explosion.h"
+#include "../Characters/Sword.h"
+#include "../Characters/Bullet.h"
 
 class Game {
 private:
     LinkedList<Player *> *playersList;
     LinkedList<Enemy *> *enemyList;
     LinkedList<Explosion *> *explosionList;
+    LinkedList<Sword *> *swordList;
+    LinkedList<Bullet *> *bulletList;
+
     ALLEGRO_BITMAP *tiles;
     Player *player;
     int map[21][27];
     Dijkstra dij = Dijkstra();//Agregue esta variable
-    int level;
     int animationTimer;
+    int currentAttack;
+    int level;
 
     void createPlayers();
     void drawMap();
@@ -26,8 +32,10 @@ private:
 public:
     Game();//Hice un cambio en este metodo
     void update(int, int);//Y en este metodo tambien XD
-    void updateCenter(int x, int y);//Añadi este metodo para definir el centro d calculo para pathfinding
-    Enemy * searchEnemy(int x, int y);
+    void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
+    void attack1();
+    void attack2();
+    Enemy * searchEnemy(int, int);
     void draw();
     ~Game();
 };

@@ -5,11 +5,14 @@
 Game::Game() {
     playersList = new LinkedList<Player *>;
     enemyList = new LinkedList<Enemy *>;
+    swordList = new LinkedList<Sword *>;
+    bulletList = new LinkedList<Bullet *>;
     explosionList = new LinkedList<Explosion *>;
 
     player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
     animationTimer = 0;
+    currentAttack = 2;
     level = 1;
 
     createMap();
@@ -37,40 +40,120 @@ void Game::update(int x, int y) {
         player->update(x * 50, y * 50);
     }
 
-    for (int i = 0; i < enemyList->length(); ++i) {
-        int playerY = player->getPosy();
-        int playerX = player->getPosx();
+    if (currentAttack == 1)
+        attack1();
+    else if (currentAttack == 2)
+        attack2();
 
-        if (map[playerY][playerX - 1] == 3) {
-            if (!player->isAttacking())
-                player->attacking(searchEnemy(playerX - 1, playerY), 3, 0);
-        }
-        else if (map[playerY][playerX + 1] == 3) {
-            if (!player->isAttacking())
-                player->attacking(searchEnemy(playerX + 1, playerY), 1, 0);
-        }
-        else if (map[playerY - 1][playerX] == 3) {
-            if (!player->isAttacking())
-                player->attacking(searchEnemy(playerX, playerY - 1), 3, 1);
-        }
-        else if (map[playerY + 1][playerX] == 3) {
-            if (!player->isAttacking())
-                player->attacking(searchEnemy(playerX, playerY + 1), 1, 1);
-        }
-
-        if (enemyList->get(i)->getLife() <= 0){
-            int enemyX = enemyList->get(i)->getPosx();
-            int enemyY = enemyList->get(i)->getPosy();
-            map[enemyY][enemyX] = 0;
-            explosionList->add(new Explosion(enemyX, enemyY));
-
-            enemyList->remove(i);
-        }
+    for (int i = 0; i < swordList->length(); ++i) {
+        if (!swordList->get(i)->isAttacking())
+            swordList->remove(i);
     }
 
     for (int j = 0; j < explosionList->length(); ++j) {
         if (explosionList->get(j)->getPivotY() == 2)
             explosionList->remove(j);
+    }
+
+    for (int l = 0; l < bulletList->length(); ++l) {
+        if (bulletList->get(l)->getTimer() == 1)
+            bulletList->remove(l);
+        else if (map[bulletList->get(l)->getY() / 50][bulletList->get(l)->getX() / 50] == 3){
+            Enemy * tmp = searchEnemy(bulletList->get(l)->getX() / 50, bulletList->get(l)->getY() / 50);
+            if (tmp != nullptr)
+                tmp->getDamage();
+            bulletList->remove(l);
+        }
+    }
+
+    //Busca los enemigos muertos
+    for (int k = 0; k < enemyList->length(); ++k) {
+        if (enemyList->get(k)->getLife() <= 0){
+            int enemyX = enemyList->get(k)->getPosx();
+            int enemyY = enemyList->get(k)->getPosy();
+
+            map[enemyY][enemyX] = 0;
+            explosionList->add(new Explosion(enemyX, enemyY));
+            enemyList->remove(k);
+        }
+    }
+}
+
+void Game::updateCenter(int x, int y){
+    int xPlayer,yPlayer;
+    xPlayer = player->getPosx();//posicion actual del jugador
+    yPlayer = player->getPosy();
+    dij.definirPesos(x,y);//define los pesos a partir del nodo que se clickeo
+    dij.definirRutaOptima(xPlayer,yPlayer);//define la ruta desde el la posicion inicial del personaje
+}
+
+/**
+ * Metodo que hace el ataque 1 de los soldados.
+ */
+void Game::attack1() {
+    for (int i = 0; i < enemyList->length(); i++) {
+        int playerY = player->getPosy();
+        int playerX = player->getPosx();
+
+        if (map[playerY][playerX - 1] == 3) {
+            if (!player->isAttacking()) {
+                player->attacking();
+                swordList->add(new Sword(searchEnemy(playerX - 1, playerY), (playerX - 1) * 50, playerY * 50, 3, 0));
+            }
+        }
+        else if (map[playerY][playerX + 1] == 3) {
+            if (!player->isAttacking()){
+                player->attacking();
+                swordList->add(new Sword(searchEnemy(playerX + 1, playerY), (playerX + 1) * 50, playerY * 50, 1, 0));
+            }
+        }
+        else if (map[playerY - 1][playerX] == 3) {
+            if (!player->isAttacking()){
+                player->attacking();
+                swordList->add(new Sword(searchEnemy(playerX, playerY - 1), playerX * 50, (playerY - 1) * 50, 3, 1));
+            }
+        }
+        else if (map[playerY + 1][playerX] == 3) {
+            if (!player->isAttacking()){
+                player->attacking();
+                swordList->add(new Sword(searchEnemy(playerX, playerY + 1), playerX * 50, (playerY + 1) * 50, 1, 1));
+            }
+        }
+    }
+}
+
+void Game::attack2() {
+    for (int i = 0; i < enemyList->length(); i++) {
+        int playerY = player->getPosy();
+        int playerX = player->getPosx();
+
+        //Rango de disparo.
+        for (int j = 0; j < 5; ++j) {
+            if (map[playerY][playerX - (j + 1)] == 3) {
+                if (!player->isAttacking()) {
+                    player->attacking();
+                    bulletList->add(new Bullet(player, (playerX - 5)* 50, playerY * 50));
+                }
+            }
+            else if (map[playerY][playerX + j] == 3) {
+                if (!player->isAttacking()){
+                    player->attacking();
+                    bulletList->add(new Bullet(player, (playerX + 5)* 50, playerY * 50));
+                }
+            }
+            else if (map[playerY - (j + 1)][playerX] == 3) {
+                if (!player->isAttacking()) {
+                    player->attacking();
+                    bulletList->add(new Bullet(player, playerX * 50, (playerY - 5) * 50));
+                }
+            }
+            else if (map[playerY + j][playerX] == 3) {
+                if (!player->isAttacking()){
+                    player->attacking();
+                    bulletList->add(new Bullet(player, playerX * 50, (playerY + 5) * 50));
+                }
+            }
+        }
     }
 }
 
@@ -84,27 +167,29 @@ Enemy *Game::searchEnemy(int x, int y) {
     return nullptr;
 }
 
-void Game::updateCenter(int x, int y){
-    int xPlayer,yPlayer;
-    xPlayer = player->getPosx();//posicion actual del jugador
-    yPlayer = player->getPosy();
-    dij.definirPesos(x,y);//define los pesos a partir del nodo que se clickeo
-    dij.definirRutaOptima(xPlayer,yPlayer);//define la ruta desde el la posicion inicial del personaje
-}
-
 void Game::draw() {
     drawMap();
 
-    for (int i = 0; i < enemyList->length(); ++i) {
-        if (enemyList->get(i) != nullptr)
+    player->draw();
+
+    for (int i = 0; i < enemyList->length(); i++) {
+        if (enemyList->get(i) != nullptr) {
             enemyList->get(i)->draw();
+        }
     }
 
-    for (int j = 0; j < explosionList->length(); ++j) {
+    for (int j = 0; j < explosionList->length(); j++) {
         explosionList->get(j)->draw();
     }
 
-    player->draw();
+    for (int k = 0; k < swordList->length(); k++) {
+        swordList->get(k)->draw();
+    }
+
+    for (int l = 0; l < bulletList->length(); ++l) {
+        bulletList->get(l)->draw();
+    }
+
 }
 
 void Game::createPlayers() {
@@ -155,5 +240,7 @@ Game::~Game(){
     delete playersList;
     delete enemyList;
     delete explosionList;
+    delete swordList;
+    delete bulletList;
     al_destroy_bitmap(tiles);
 }
