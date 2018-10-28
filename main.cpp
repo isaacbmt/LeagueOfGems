@@ -34,11 +34,15 @@ int main(int argc, char **argv){
     al_install_keyboard();
     al_install_audio();
     al_init_acodec_addon();
+    al_reserve_samples(2);
 
 
     ALLEGRO_SAMPLE *soundWalk = al_load_sample("../resources/Caminando.wav");
+    ALLEGRO_SAMPLE *song = al_load_sample("../resources/Cancion.ogg");
 
-    al_reserve_samples(1);
+    ALLEGRO_SAMPLE_INSTANCE *songInstance = al_create_sample_instance(song);
+    al_set_sample_instance_playmode(songInstance, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_sample_instance_to_mixer(songInstance, al_get_default_mixer());
 
 
 
@@ -51,6 +55,7 @@ int main(int argc, char **argv){
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_timer_event_source(drawTimer));
 
+    al_play_sample_instance(songInstance);
     al_start_timer(timer);
     al_start_timer(drawTimer);
 
@@ -118,6 +123,8 @@ int main(int argc, char **argv){
     al_uninstall_mouse();
     al_uninstall_keyboard();
     al_destroy_sample(soundWalk);
+    al_destroy_sample(song);
+    al_destroy_sample_instance(songInstance);
     al_destroy_event_queue(event_queue);
     return 0;
 }
