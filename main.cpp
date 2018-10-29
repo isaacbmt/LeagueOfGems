@@ -2,6 +2,9 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+
 #include <iostream>
 #include "GameLevels/Game.h"
 
@@ -26,10 +29,13 @@ int main(int argc, char **argv){
     al_init_image_addon();
     al_init_primitives_addon();
 
+    al_install_audio();
+    al_init_acodec_addon();
+
     al_install_mouse();
     al_install_keyboard();
 
-    ALLEGRO_TIMER *timer = al_create_timer(1.0 / 30);
+    ALLEGRO_TIMER *timer = al_create_timer(1.0 / 60);
     ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 60);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
@@ -58,7 +64,7 @@ int main(int argc, char **argv){
             if (events.timer.source == timer)
             {
                 // Update
-                game->update(x / 50, y/ 50);
+                game->update();
 
                 ALLEGRO_MOUSE_STATE state;
                 al_get_mouse_state(&state);

@@ -6,30 +6,46 @@
 #include <string>
 #include "Enemy.h"
 #include "math.h"
+#include "../GreedyAlgorithms/Dijkstra.h"
 
 class Player {
 private:
     ALLEGRO_BITMAP *image;
-    ALLEGRO_BITMAP *imgAttack;
-    int x, y;
+    Dijkstra *dij;
+    int x;
+    int y;
     int direction;
     int movement;
-    int attackX, attackY;
+    int attackX;
     bool attack;
     int animationTimer;
-    int maxLife;
     int life;
 
     void timer();
+
 public:
     Player(std::string);
+
     Player(int, int, std::string);
+
     void update(int, int);
+
     void draw();
+
     int getPosx();
+
     int getPosy();
+
     void attacking();
+
     bool isAttacking();
+
+    Dijkstra *getDij();
+
+    void setDij(int [21][27]);
+
+    int getDirection() const;
+
     ~Player();
 };
 

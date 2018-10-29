@@ -9,8 +9,10 @@ Game::Game() {
     bulletList = new LinkedList<Bullet *>;
     explosionList = new LinkedList<Explosion *>;
 
-    player = new Player("../resources/hetalia.png");
+    //player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
+    x = 0;
+    y = 0;
     animationTimer = 0;
     currentAttack = 2;
     level = 1;
@@ -20,25 +22,11 @@ Game::Game() {
     dij = Dijkstra(map);// A esta clase nadamas se le debe pazar la matriz del mapa al iniciarla
 }
 
-void Game::update(int x, int y) {
-    int nextX, nextY;
-
-    if (animationTimer % 15 == 0) {
-        Vertice next = dij.obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
-        nextX = (next.posicionXtiles) * 50;
-        nextY = (next.posicionYtiles) * 50;
-    } else {
-        nextX = player->getPosx() * 50;
-        nextY = player->getPosy() * 50;
-    }
+void Game::update() {
+    if (level == 1 && animationTimer % 25 == 0)
+        movement1();
 
     animationTimer++;
-
-    if(nextX != -50) {
-        player->update(nextX, nextY);
-    } else {
-        player->update(x * 50, y * 50);
-    }
 
     if (currentAttack == 1)
         attack1();
@@ -80,77 +68,126 @@ void Game::update(int x, int y) {
 }
 
 void Game::updateCenter(int x, int y){
-    int xPlayer,yPlayer;
-    xPlayer = player->getPosx();//posicion actual del jugador
-    yPlayer = player->getPosy();
-    dij.definirPesos(x,y);//define los pesos a partir del nodo que se clickeo
-    dij.definirRutaOptima(xPlayer,yPlayer);//define la ruta desde el la posicion inicial del personaje
+    int xPlayer, yPlayer;
+
+    this->x = x;
+    this->y = y;
+
+    for (int i = 0; i < playersList->length(); i++)
+    {
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
+
+        playersList->get(i)->setDij(map);
+
+        xPlayer = playersList->get(i)->getPosx();//posicion actual del jugador
+        yPlayer = playersList->get(i)->getPosy();
+
+        //define los pesos a partir del nodo que se clickeo
+        playersList->get(i)->getDij()->definirPesos(x,y);
+        //define la ruta desde el la posicion inicial del personaje
+        playersList->get(i)->getDij()->definirRutaOptima(xPlayer,yPlayer);
+    }
+}
+
+void Game::movement1() {
+    for (int i = 0; i < playersList->length(); ++i) {
+        int nextX, nextY;
+
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
+
+        Dijkstra *finder = playersList->get(i)->getDij();
+
+        if (finder != nullptr){
+            int lastX = playersList->get(i)->getPosx(), lastY = playersList->get(i)->getPosy();
+
+            Vertice next = finder->obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
+            nextX = (next.posicionXtiles) * 50;
+            nextY = (next.posicionYtiles) * 50;
+            
+        } else {
+            nextX = playersList->get(i)->getPosx() * 50;
+            nextY = playersList->get(i)->getPosy() * 50;
+        }
+
+        if(nextX != -50) {
+            playersList->get(i)->update(nextX, nextY);
+        }
+        else {
+            playersList->get(i)->update(x * 50, y * 50);
+        }
+
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 2;
+    }
 }
 
 /**
  * Metodo que hace el ataque 1 de los soldados.
  */
 void Game::attack1() {
-    for (int i = 0; i < enemyList->length(); i++) {
-        int playerY = player->getPosy();
-        int playerX = player->getPosx();
+    for (int r = 0; r < playersList->length(); ++r) {
+        for (int i = 0; i < enemyList->length(); i++) {
+            int playerY = playersList->get(r)->getPosy();
+            int playerX = playersList->get(r)->getPosx();
 
-        if (map[playerY][playerX - 1] == 3) {
-            if (!player->isAttacking()) {
-                player->attacking();
-                swordList->add(new Sword(searchEnemy(playerX - 1, playerY), (playerX - 1) * 50, playerY * 50, 3, 0));
+            if (map[playerY][playerX - 1] == 3) {
+                if (!playersList->get(r)->isAttacking()) {
+                    playersList->get(r)->attacking();
+                    swordList->add(new Sword(searchEnemy(playerX - 1, playerY), (playerX - 1) * 50, playerY * 50, 3, 0));
+                }
             }
-        }
-        else if (map[playerY][playerX + 1] == 3) {
-            if (!player->isAttacking()){
-                player->attacking();
-                swordList->add(new Sword(searchEnemy(playerX + 1, playerY), (playerX + 1) * 50, playerY * 50, 1, 0));
+            else if (map[playerY][playerX + 1] == 3) {
+                if (!playersList->get(r)->isAttacking()){
+                    playersList->get(r)->attacking();
+                    swordList->add(new Sword(searchEnemy(playerX + 1, playerY), (playerX + 1) * 50, playerY * 50, 1, 0));
+                }
             }
-        }
-        else if (map[playerY - 1][playerX] == 3) {
-            if (!player->isAttacking()){
-                player->attacking();
-                swordList->add(new Sword(searchEnemy(playerX, playerY - 1), playerX * 50, (playerY - 1) * 50, 3, 1));
+            else if (map[playerY - 1][playerX] == 3) {
+                if (!playersList->get(r)->isAttacking()){
+                    playersList->get(r)->attacking();
+                    swordList->add(new Sword(searchEnemy(playerX, playerY - 1), playerX * 50, (playerY - 1) * 50, 3, 1));
+                }
             }
-        }
-        else if (map[playerY + 1][playerX] == 3) {
-            if (!player->isAttacking()){
-                player->attacking();
-                swordList->add(new Sword(searchEnemy(playerX, playerY + 1), playerX * 50, (playerY + 1) * 50, 1, 1));
+            else if (map[playerY + 1][playerX] == 3) {
+                if (!playersList->get(r)->isAttacking()){
+                    playersList->get(r)->attacking();
+                    swordList->add(new Sword(searchEnemy(playerX, playerY + 1), playerX * 50, (playerY + 1) * 50, 1, 1));
+                }
             }
         }
     }
 }
 
 void Game::attack2() {
-    for (int i = 0; i < enemyList->length(); i++) {
-        int playerY = player->getPosy();
-        int playerX = player->getPosx();
+    for (int r = 0; r < playersList->length(); ++r) {
+        for (int i = 0; i < enemyList->length(); i++) {
+            int playerY = playersList->get(r)->getPosy();
+            int playerX = playersList->get(r)->getPosx();
 
-        //Rango de disparo.
-        for (int j = 0; j < 5; ++j) {
-            if (map[playerY][playerX - (j + 1)] == 3) {
-                if (!player->isAttacking()) {
-                    player->attacking();
-                    bulletList->add(new Bullet(player, (playerX - 5)* 50, playerY * 50));
+            //Rango de disparo.
+            for (int j = 0; j < 5; ++j) {
+                if (map[playerY][playerX - (j + 1)] == 3) {
+                    if (!playersList->get(r)->isAttacking()) {
+                        playersList->get(r)->attacking();
+                        bulletList->add(new Bullet(playersList->get(r), (playerX - 5)* 50, playerY * 50));
+                    }
                 }
-            }
-            else if (map[playerY][playerX + j] == 3) {
-                if (!player->isAttacking()){
-                    player->attacking();
-                    bulletList->add(new Bullet(player, (playerX + 5)* 50, playerY * 50));
+                else if (map[playerY][playerX + j] == 3) {
+                    if (!playersList->get(r)->isAttacking()){
+                        playersList->get(r)->attacking();
+                        bulletList->add(new Bullet(playersList->get(r), (playerX + 5)* 50, playerY * 50));
+                    }
                 }
-            }
-            else if (map[playerY - (j + 1)][playerX] == 3) {
-                if (!player->isAttacking()) {
-                    player->attacking();
-                    bulletList->add(new Bullet(player, playerX * 50, (playerY - 5) * 50));
+                else if (map[playerY - (j + 1)][playerX] == 3) {
+                    if (!playersList->get(r)->isAttacking()) {
+                        playersList->get(r)->attacking();
+                        bulletList->add(new Bullet(playersList->get(r), playerX * 50, (playerY - 5) * 50));
+                    }
                 }
-            }
-            else if (map[playerY + j][playerX] == 3) {
-                if (!player->isAttacking()){
-                    player->attacking();
-                    bulletList->add(new Bullet(player, playerX * 50, (playerY + 5) * 50));
+                else if (map[playerY + j][playerX] == 3) {
+                    if (!playersList->get(r)->isAttacking()){
+                        playersList->get(r)->attacking();
+                        bulletList->add(new Bullet(playersList->get(r), playerX * 50, (playerY + 5) * 50));
+                    }
                 }
             }
         }
@@ -170,7 +207,10 @@ Enemy *Game::searchEnemy(int x, int y) {
 void Game::draw() {
     drawMap();
 
-    player->draw();
+    //player->draw();
+    for (int m = 0; m < playersList->length(); m++) {
+        playersList->get(m)->draw();
+    }
 
     for (int i = 0; i < enemyList->length(); i++) {
         if (enemyList->get(i) != nullptr) {
@@ -225,7 +265,12 @@ void Game::createMap() {
                 enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
                 enemys -= 1;
             }
-            else if (random > 81){
+            else if ((di == 19 && dj == 15) || (di == 20 && dj == 15) || (di == 21 && dj == 15)){
+                map[dj][di] = 2;
+                playersList->add(new Player(di * 50, dj * 50, "../resources/hetalia.png"));
+                //player = new Player(di * 50, dj * 50, "../resources/hetalia.png");
+            }
+            else if (random > 83){
                 map[dj][di] = 1;
             }
             else{
@@ -235,8 +280,20 @@ void Game::createMap() {
     }
 }
 
+void Game::printM() {
+    cout << "[ ";
+    for (int j = 0; j < 21; j++) {
+        cout << "[";
+        for (int i = 0; i < 27; ++i) {
+            cout << map[j][i] << ", ";
+        }
+        cout << "]" << endl;
+    }
+    cout << " ]\n\n" << endl;
+
+}
+
 Game::~Game(){
-    delete player;
     delete playersList;
     delete enemyList;
     delete explosionList;

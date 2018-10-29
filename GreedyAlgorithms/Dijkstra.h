@@ -38,7 +38,6 @@ private:
     Vertice retornarVecinoMenor(int posicionX, int posicionY, double peso);
 
 
-
 public:
     Dijkstra(int mapa[FilasMapa][ColumnasMapa]);
 

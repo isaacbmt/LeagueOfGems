@@ -10,7 +10,7 @@ add_executable(LeagueOfGems main.cpp Characters/Player.cpp Characters/Player.h G
 
 
 target_link_libraries(LeagueOfGems -lallegro -lallegro_font -lallegro_image -lallegro_ttf -lallegro_color
-        -lallegro_primitives)
+        -lallegro_primitives -lallegro_audio -lallegro_acodec)
 
 
 

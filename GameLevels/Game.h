@@ -18,7 +18,9 @@ private:
     LinkedList<Bullet *> *bulletList;
 
     ALLEGRO_BITMAP *tiles;
-    Player *player;
+    //Player *player;
+    int x;
+    int y;
     int map[21][27];
     Dijkstra dij = Dijkstra();//Agregue esta variable
     int animationTimer;
@@ -31,12 +33,23 @@ private:
 
 public:
     Game();//Hice un cambio en este metodo
-    void update(int, int);//Y en este metodo tambien XD
+
+    void update();//Y en este metodo tambien XD
+
     void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
+
+    void movement1();
+
     void attack1();
+
     void attack2();
+
     Enemy * searchEnemy(int, int);
+
     void draw();
+
+    void printM();
+
     ~Game();
 };
 

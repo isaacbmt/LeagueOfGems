@@ -166,9 +166,10 @@ Vertice Dijkstra::obtenerSiguienteVertice(){
     Vertice aux;
     aux.posicionXtiles = -1;
     aux.posicionYtiles = -1;
-    if(contador < ruta->size()){
+    if(contador < ruta->size() && contador < 150){
         aux = ruta->operator[](contador);
     }
     contador++;
+
     return aux;
 }

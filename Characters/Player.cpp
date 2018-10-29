@@ -65,6 +65,10 @@ void Player::attacking() {
     attack = true;
 }
 
+int Player::getDirection() const {
+    return direction;
+}
+
 int Player::getPosx() {
     return x / 50;
 }
@@ -79,5 +83,12 @@ bool Player::isAttacking() {
 
 Player::~Player() {
     al_destroy_bitmap(image);
-    al_destroy_bitmap(imgAttack);
+}
+
+Dijkstra *Player::getDij() {
+    return dij;
+}
+
+void Player::setDij(int map[21][27]) {
+    dij = new Dijkstra(map);
 }
