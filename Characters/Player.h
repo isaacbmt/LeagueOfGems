@@ -47,7 +47,7 @@ public:
 
     void setDij(int [21][27]);
 
-
+    int getLife();
 
     int getDirection() const;
 

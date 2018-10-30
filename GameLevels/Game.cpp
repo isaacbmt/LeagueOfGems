@@ -65,6 +65,16 @@ void Game::update() {
             enemyList->remove(k);
         }
     }
+
+    for (int m = 0; m < playersList->length(); ++m) {
+        if (playersList->get(m)->getLife() <= 0){
+            int playerX = playersList->get(m)->getPosx();
+            int playerY = playersList->get(m)->getPosy();
+
+            map[playerY][playerX] = 0;
+            playersList->remove(m);
+        }
+    }
 }
 
 void Game::updateCenter(int x, int y){
@@ -99,12 +109,15 @@ void Game::updateCenter(int x, int y){
 
         for (int j = 0; j < playersList->length(); j++) {
             while (flag) {
+                if (izq) {
+                    x--;
+                }
+                else if (der) {
+                    x++;
+                }
+
                 playersList->get(i)->getDij()->definirPesos(x, y + colum);
 
-                if (izq)
-                    x--;
-                else if (der)
-                    x++;
                 cout << "X: " << x << endl;
 
                 if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
@@ -116,7 +129,7 @@ void Game::updateCenter(int x, int y){
                 }
             }
         }
-        if (i % 5 == 0 && i != 0) {
+        if (i % 5 == 0) {
             x = tx;
 
             if (aba)
@@ -303,14 +316,15 @@ void Game::createMap() {
             }
             else if (16 < di && di < 22 && 16 < dj && dj < 20){
                 map[dj][di] = 2;
-                playersList->add(new Player(di * 50, dj * 50, "../resources/hetalia.png"));
+                //playersList->add(new Player(di * 50, dj * 50, "../resources/hetalia.png"));
+                playersList->add(new Player(di * 50, dj * 50, "../resources/sprite" + to_string(players) + ".png"));
 
                 playersList->get(players)->targetX = di;
                 playersList->get(players)->targetY = dj;
                 players++;
                 //player = new Player(di * 50, dj * 50, "../resources/hetalia.png");
             }
-            else if (random > 86){
+            else if (random > 88){
                 map[dj][di] = 1;
             }
             else{

@@ -8,7 +8,7 @@ Player::Player(std::string image) {
     this->image = al_load_bitmap(image.c_str());
     this->movement = 0;
     this->animationTimer = 0;
-    this->life = 3;
+    this->life = 50;
     attack = false;
 }
 
@@ -18,7 +18,7 @@ Player::Player(int x, int y, std::string image) {
     this->y = y;
     this->movement = 0;
     this->animationTimer = 0;
-    this->life = 3;
+    this->life = 50;
     attack = false;
 }
 
@@ -81,8 +81,8 @@ bool Player::isAttacking() {
     return attack;
 }
 
-Player::~Player() {
-    al_destroy_bitmap(image);
+int Player::getLife() {
+    return life;
 }
 
 Dijkstra *Player::getDij() {
@@ -91,4 +91,8 @@ Dijkstra *Player::getDij() {
 
 void Player::setDij(int map[21][27]) {
     dij = new Dijkstra(map);
+}
+
+Player::~Player() {
+    al_destroy_bitmap(image);
 }
