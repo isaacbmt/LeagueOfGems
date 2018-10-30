@@ -24,6 +24,9 @@ private:
     void timer();
 
 public:
+    int targetX;
+    int targetY;
+
     Player(std::string);
 
     Player(int, int, std::string);
@@ -43,6 +46,8 @@ public:
     Dijkstra *getDij();
 
     void setDij(int [21][27]);
+
+
 
     int getDirection() const;
 

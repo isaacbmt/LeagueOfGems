@@ -45,7 +45,7 @@ public:
 
     void definirPesos(int x, int y);
 
-    void definirRutaOptima(int x, int y);
+    int definirRutaOptima(int x, int y);
 
     Vertice obtenerSiguienteVertice();
 

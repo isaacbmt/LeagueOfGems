@@ -72,6 +72,18 @@ void Game::updateCenter(int x, int y){
 
     this->x = x;
     this->y = y;
+    int tx = x, colum = 0;
+
+    bool izq = false, der = false, aba = false, arr = false;
+    if (x >= 6)
+        izq = true;
+    else if (x < 6)
+        der = true;
+
+    if (y > 16)
+        arr = true;
+    else if (y <= 16)
+        aba = true;
 
     for (int i = 0; i < playersList->length(); i++)
     {
@@ -82,29 +94,53 @@ void Game::updateCenter(int x, int y){
         xPlayer = playersList->get(i)->getPosx();//posicion actual del jugador
         yPlayer = playersList->get(i)->getPosy();
 
-        //define los pesos a partir del nodo que se clickeo
-        playersList->get(i)->getDij()->definirPesos(x,y);
-        //define la ruta desde el la posicion inicial del personaje
-        playersList->get(i)->getDij()->definirRutaOptima(xPlayer,yPlayer);
+//      fila es de 5
+        bool flag = true;
+
+        for (int j = 0; j < playersList->length(); j++) {
+            while (flag) {
+                playersList->get(i)->getDij()->definirPesos(x, y + colum);
+
+                if (izq)
+                    x--;
+                else if (der)
+                    x++;
+                cout << "X: " << x << endl;
+
+                if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
+                    playersList->get(i)->targetX = x;
+                    playersList->get(i)->targetY = y + colum;
+
+                    flag = false;
+                    break;
+                }
+            }
+        }
+        if (i % 5 == 0 && i != 0) {
+            x = tx;
+
+            if (aba)
+                colum++;
+            else if (arr)
+                colum--;
+        }
     }
 }
 
 void Game::movement1() {
     for (int i = 0; i < playersList->length(); ++i) {
-        int nextX, nextY;
+        int nextX , nextY;
 
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
 
         Dijkstra *finder = playersList->get(i)->getDij();
 
-        if (finder != nullptr){
-            int lastX = playersList->get(i)->getPosx(), lastY = playersList->get(i)->getPosy();
-
+        if (finder != nullptr) {
             Vertice next = finder->obtenerSiguienteVertice();//obtiene el siguiente nodo al que debe avanzar
             nextX = (next.posicionXtiles) * 50;
             nextY = (next.posicionYtiles) * 50;
-            
-        } else {
+        }
+        else {
             nextX = playersList->get(i)->getPosx() * 50;
             nextY = playersList->get(i)->getPosy() * 50;
         }
@@ -113,7 +149,7 @@ void Game::movement1() {
             playersList->get(i)->update(nextX, nextY);
         }
         else {
-            playersList->get(i)->update(x * 50, y * 50);
+            playersList->get(i)->update(playersList->get(i)->targetX * 50, playersList->get(i)->targetY * 50);
         }
 
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 2;
@@ -254,7 +290,7 @@ void Game::drawMap() {
 
 void Game::createMap() {
     std::srand(std::time(0));
-    int random, enemys = 4;
+    int random, enemys = 4, players = 0;
 
     for (int dj = 0; dj < 21; dj++) {
         for (int di = 0; di < 27; di++) {
@@ -265,12 +301,16 @@ void Game::createMap() {
                 enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
                 enemys -= 1;
             }
-            else if ((di == 19 && dj == 15) || (di == 20 && dj == 15) || (di == 21 && dj == 15)){
+            else if (16 < di && di < 22 && 16 < dj && dj < 20){
                 map[dj][di] = 2;
                 playersList->add(new Player(di * 50, dj * 50, "../resources/hetalia.png"));
+
+                playersList->get(players)->targetX = di;
+                playersList->get(players)->targetY = dj;
+                players++;
                 //player = new Player(di * 50, dj * 50, "../resources/hetalia.png");
             }
-            else if (random > 83){
+            else if (random > 86){
                 map[dj][di] = 1;
             }
             else{
@@ -278,6 +318,8 @@ void Game::createMap() {
             }
         }
     }
+
+    cout << "Largo: " << playersList->length() << endl;
 }
 
 void Game::printM() {

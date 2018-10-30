@@ -24,7 +24,8 @@ void Dijkstra::evaluarVecinos(int posicionX, int posicionY, double peso){
             if(y < 0 || x < 0 || y > FilasMapa-1 || x > ColumnasMapa-1){
             }else if(x == posicionX && y == posicionY){
             }else{
-                Vertice aux;
+                Vertice aux{};
+                
                 for(int i = 0; i<verticesPendientes->size(); i++) {
                     aux = verticesPendientes->operator[](i);
                     if (aux.posicionXtiles == x && aux.posicionYtiles == y) {
@@ -46,8 +47,8 @@ void Dijkstra::evaluarVecinos(int posicionX, int posicionY, double peso){
 
 Vertice Dijkstra::retornarVecinoMenor(int posicionX, int posicionY, double peso){
     double dist = peso;
-    Vertice verticeAux1;
-    Vertice verticeAux2;
+    Vertice verticeAux1{};
+    Vertice verticeAux2{};
     verticeAux1.distancia = peso;
     verticeAux1.posicionXtiles = posicionX;
     verticeAux1.posicionYtiles = posicionY;
@@ -78,7 +79,7 @@ Dijkstra::Dijkstra(int mapa[FilasMapa][ColumnasMapa]){
     for (int y = 0; y < FilasMapa; y++){
         for (int x = 0; x < ColumnasMapa; x++){
             if(mapa[y][x] == 0) {
-                Vertice vertice;
+                Vertice vertice{};
                 vertice.distancia = INF;
                 vertice.posicionXtiles = x;
                 vertice.posicionYtiles = y;
@@ -96,7 +97,7 @@ void Dijkstra::definirPesos(int x, int y){
             verticesPendientes->push_back(verticesMapa->operator[](i));
         }
         if(definirCentro(x,y)) {
-            Vertice aux;
+            Vertice aux{};
             for(int i = 0; i < 55; i++) {
                 for (int i = 0; i < verticesPendientes->size(); i++) {
                     aux = verticesPendientes->operator[](i);
@@ -110,12 +111,12 @@ void Dijkstra::definirPesos(int x, int y){
     }
 }
 
-void Dijkstra::definirRutaOptima(int x, int y) {
+int Dijkstra::definirRutaOptima(int x, int y) {
     if (y < FilasMapa && x < ColumnasMapa) {
         int xAux;
         int yAux;
-        Vertice verticeActual;
-        Vertice vertAux;
+        Vertice verticeActual = {};
+        Vertice vertAux{};
         verticeActual.distancia = INF;
         ruta->clear();
         contador = 0;
@@ -132,6 +133,7 @@ void Dijkstra::definirRutaOptima(int x, int y) {
 
         if (verticeActual.distancia == INF) {
             cout << "Fuera de rango" << endl;
+            return 0;
         } else if (verticeActual.distancia == 0.0) {
             ruta->push_back(verticeActual);
         } else {
@@ -159,17 +161,22 @@ void Dijkstra::definirRutaOptima(int x, int y) {
                  << endl;
         }
         cout << "}" << endl;
+        return 1;
     }
+    return 0;
 }
 
 Vertice Dijkstra::obtenerSiguienteVertice(){
-    Vertice aux;
+    Vertice aux{};
     aux.posicionXtiles = -1;
     aux.posicionYtiles = -1;
-    if(contador < ruta->size() && contador < 150){
-        aux = ruta->operator[](contador);
+
+    if (contador < 150) {
+        if(contador < ruta->size()) {
+            aux = ruta->operator[](contador);
+        }
+        contador++;
     }
-    contador++;
 
     return aux;
 }
