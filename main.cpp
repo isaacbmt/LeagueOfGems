@@ -1,8 +1,11 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+
 #include <iostream>
-#include <thread>
 #include "GameLevels/Game.h"
 
 int main(int argc, char **argv){
@@ -24,19 +27,22 @@ int main(int argc, char **argv){
     al_set_window_position(display, 600, 500);
 
     al_init_image_addon();
+    al_init_primitives_addon();
+
+    al_install_audio();
+    al_init_acodec_addon();
 
     al_install_mouse();
     al_install_keyboard();
 
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / 60);
-    ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 30);
+    ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 60);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_timer_event_source(drawTimer));
-
 
     al_start_timer(timer);
     al_start_timer(drawTimer);
@@ -58,7 +64,7 @@ int main(int argc, char **argv){
             if (events.timer.source == timer)
             {
                 // Update
-                game->update(x, y);
+                game->update();
 
                 ALLEGRO_MOUSE_STATE state;
                 al_get_mouse_state(&state);
@@ -68,7 +74,7 @@ int main(int argc, char **argv){
                     y = state.y;
                 }
                 else if (state.buttons & 2) {
-                    // Pathfinding
+                    // GreedyAlgorithms
                     x = state.x;
                     y = state.y;
 
@@ -78,6 +84,7 @@ int main(int argc, char **argv){
                     int posy = y / 50;
 
                     cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
+                    game->updateCenter(posx,posy);//Aqui se recalcula el nodo al que tiene q llegar el personaje
                 }
 
                 if (events.type == ALLEGRO_EVENT_MOUSE_AXES ){
@@ -97,6 +104,7 @@ int main(int argc, char **argv){
         }
     }
 
+    delete game;
     al_destroy_display(display);
     al_uninstall_mouse();
     al_uninstall_keyboard();

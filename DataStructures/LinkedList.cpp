@@ -1,3 +1,4 @@
+#include "../Characters/Enemy.h"
 #include <iostream>
 
 using namespace std;
@@ -80,7 +81,7 @@ public:
             tmp = head;
             head = head->getNext();
             size--;
-            free (tmp);
+            delete tmp;
             return;
         }
         else{
@@ -89,10 +90,10 @@ public:
 
             for (int i = 0; i < size; ++i) {
                 if (i == index){
-                    cout << "Eliminado de la lista" << endl;
                     tmp2->setNext(tmp->getNext());
-                    free (tmp);
+                    delete tmp;
                     size--;
+                    cout << "Eliminado de la lista" << endl;
                     return;
                 }
                 tmp2 = tmp;
