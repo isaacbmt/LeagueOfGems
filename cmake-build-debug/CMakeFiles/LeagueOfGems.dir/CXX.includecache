@@ -1,0 +1,64 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/AStarSearch.h
+iostream
+-
+stdio.h
+-
+assert.h
+-
+algorithm
+-
+set
+-
+vector
+-
+cfloat
+-
+
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/MapSearchNode.h
+iostream
+-
+stdio.h
+-
+math.h
+-
+AStarSearch.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/AStarSearch.h
+coordinate.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/coordinate.h
+
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/coordinate.h
+
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/execAStar.h
+MapSearchNode.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/MapSearchNode.h
+coordinate.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/coordinate.h
+
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/globalArray.h
+coordinate.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/coordinate.h
+iostream
+-
+stdio.h
+-
+math.h
+-
+vector
+-
+
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/mainPathfinding.cpp
+iostream
+-
+execAStar.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/execAStar.h
+globalArray.h
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/GreedyAlgorithms/Pathfinding/globalArray.h
+

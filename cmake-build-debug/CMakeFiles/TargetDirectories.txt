@@ -1,0 +1,3 @@
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/cmake-build-debug/CMakeFiles/LeagueOfGems.dir
+/home/leahycarlos21/Desktop/TAREA PROGRAMADA 2/LeagueOfGems/cmake-build-debug/CMakeFiles/edit_cache.dir
