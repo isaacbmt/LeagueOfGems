@@ -10,6 +10,7 @@
 
 class Enemy {
 private:
+    int maxLife;
     int life;
     int posx;
     int posy;
@@ -17,13 +18,21 @@ private:
 
 public:
     Enemy(std::string);
+
     Enemy(int, int, std::string);
+
     ~Enemy();
+
     void update(int, int);
+
     void draw();
+
     void getDamage();
+
     int getLife();
+
     int getPosx();
+
     int getPosy();
 };
 

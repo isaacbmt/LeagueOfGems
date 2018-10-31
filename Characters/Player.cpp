@@ -8,7 +8,7 @@ Player::Player(std::string image) {
     this->image = al_load_bitmap(image.c_str());
     this->movement = 0;
     this->animationTimer = 0;
-    this->life = 50;
+    this->life = 2;
     attack = false;
 }
 
@@ -18,7 +18,7 @@ Player::Player(int x, int y, std::string image) {
     this->y = y;
     this->movement = 0;
     this->animationTimer = 0;
-    this->life = 50;
+    this->life = 2;
     attack = false;
 }
 
@@ -38,6 +38,9 @@ void Player::update(int dx, int dy)
 }
 
 void Player::draw() {
+    al_draw_rectangle(getPosx() * 50 , getPosy() * 50 - 7, getPosx() * 50 + 45, getPosy() * 50 - 2, al_map_rgb(0, 0, 255), 1.0);
+    al_draw_filled_rectangle(getPosx() * 50 , getPosy() * 50 - 7, getPosx() * 50 + life, getPosy() * 50 - 2, al_map_rgb(0, 0, 255));
+
     al_draw_bitmap_region(image, 50 * movement, 50 * direction, 50, 50, x, y, 0);
     timer();
 }
@@ -83,6 +86,12 @@ bool Player::isAttacking() {
 
 int Player::getLife() {
     return life;
+}
+
+void Player::heal() {
+    if (life < 45){
+        life += 1;
+    }
 }
 
 Dijkstra *Player::getDij() {

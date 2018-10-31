@@ -14,7 +14,7 @@ Game::Game() {
     x = 0;
     y = 0;
     animationTimer = 0;
-    currentAttack = 2;
+    currentAttack = 3;
     level = 1;
 
     createMap();
@@ -32,6 +32,8 @@ void Game::update() {
         attack1();
     else if (currentAttack == 2)
         attack2();
+    else if (currentAttack == 3 && animationTimer % 250 == 0)
+        attack3();
 
     for (int i = 0; i < swordList->length(); ++i) {
         if (!swordList->get(i)->isAttacking())
@@ -78,6 +80,11 @@ void Game::update() {
 }
 
 void Game::updateCenter(int x, int y){
+    if (level == 1)
+        updateLevel1(x, y);
+}
+
+void Game::updateLevel1(int x, int y) {
     int xPlayer, yPlayer;
 
     this->x = x;
@@ -129,7 +136,7 @@ void Game::updateCenter(int x, int y){
                 }
             }
         }
-        if (i % 5 == 0) {
+        if ((i + 1) % 5 == 0) {
             x = tx;
 
             if (aba)
@@ -240,6 +247,12 @@ void Game::attack2() {
                 }
             }
         }
+    }
+}
+
+void Game::attack3() {
+    for (int i = 0; i < playersList->length(); ++i) {
+        playersList->get(i)->heal();
     }
 }
 

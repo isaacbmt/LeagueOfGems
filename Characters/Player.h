@@ -49,6 +49,8 @@ public:
 
     int getLife();
 
+    void heal();
+
     int getDirection() const;
 
     ~Player();

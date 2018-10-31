@@ -38,11 +38,15 @@ public:
 
     void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
 
+    void updateLevel1(int, int);
+
     void movement1();
 
     void attack1();
 
     void attack2();
+
+    void attack3();
 
     Enemy * searchEnemy(int, int);
 
