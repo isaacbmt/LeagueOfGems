@@ -17,6 +17,8 @@ int main(int argc, char **argv){
         return -1;
     }
 
+    cout << "    " << endl;
+
     display = al_create_display(1350, 1050);
 
     if(!display) {
