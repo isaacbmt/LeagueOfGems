@@ -7,6 +7,11 @@
 
 #include <iostream>
 #include "GameLevels/Game.h"
+#include "GreedyAlgorithms/AstarDirectory/execAStar.h"
+#include "GreedyAlgorithms/AstarDirectory/globalArray.h"
+#include "GreedyAlgorithms/AstarDirectory/MapSearchNode.h"
+#include "GreedyAlgorithms/AstarDirectory/coordinate.h"
+
 
 int main(int argc, char **argv){
     ALLEGRO_DISPLAY *display;
