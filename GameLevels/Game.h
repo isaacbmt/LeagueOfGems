@@ -18,6 +18,10 @@ private:
     LinkedList<Bullet *> *bulletList;
 
     ALLEGRO_BITMAP *tiles;
+    ALLEGRO_BITMAP *icon1;
+    ALLEGRO_BITMAP *icon2;
+    ALLEGRO_BITMAP *icon3;
+    ALLEGRO_BITMAP *icon4;
     //Player *player;
     int x;
     int y;
@@ -40,7 +44,11 @@ public:
 
     void updateLevel1(int, int);
 
+    void updateLevel2(int, int);
+
     void movement1();
+
+    void movement2();
 
     void attack1();
 
@@ -51,6 +59,10 @@ public:
     Enemy * searchEnemy(int, int);
 
     void draw();
+
+    void drawAttackIcons();
+
+    void setCurrentAttack(int);
 
     void printM();
 

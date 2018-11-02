@@ -12,6 +12,74 @@
 #include "GreedyAlgorithms/AstarDirectory/MapSearchNode.h"
 #include "GreedyAlgorithms/AstarDirectory/coordinate.h"
 
+//int main() {
+//
+//
+//    ///Esta es la matriz se generó en la interfaz
+//    int matrizInterfaz[21][27] =
+//            {
+//
+//
+//                    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  //00
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 01
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 02
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 03
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 04
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 05
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 06
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 07
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 08
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 09
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 10
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 11
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 12
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 13
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 14
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 15
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 16
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 17
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 18
+//                    {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},  // 19
+//                    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  //20
+//
+//            };
+//
+//    ///Posicipn inicial
+//    MapSearchNode nodeStart;
+//    nodeStart.x = 0;
+//    nodeStart.y = 0;
+//
+//    ///Se define la posicion del objetivo
+//    MapSearchNode nodeEnd;
+//    nodeEnd.x = 26;
+//    nodeEnd.y = 20;
+//    execAStar ejecutable;
+//    vector<coordinate> rutaPathfinding = ejecutable.obtenerCoordenadas(matrizInterfaz, nodeStart, nodeEnd);
+//
+//    cout << "Largo: " << rutaPathfinding.size() << endl;
+//    cout << rutaPathfinding[0].x << endl;
+//    rutaPathfinding.erase(rutaPathfinding.begin());
+//
+//    cout << "Largo: " << rutaPathfinding.size() << endl;
+//    cout << rutaPathfinding[0].x << endl;
+//    rutaPathfinding.erase(rutaPathfinding.begin());
+//
+//    cout << "Largo: " << rutaPathfinding.size() << endl;
+//    cout << rutaPathfinding[0].x << endl;
+//    rutaPathfinding.erase(rutaPathfinding.begin());
+//
+//    cout << "Largo: " << rutaPathfinding.size() << endl;
+//    cout << rutaPathfinding[0].x << endl;
+//
+//    for (coordinate i: rutaPathfinding) {
+//        cout << i.x << "," << i.y << endl;
+//    }
+//
+//
+//    return 0;
+//
+//}
+
 
 int main(int argc, char **argv){
     ALLEGRO_DISPLAY *display;
@@ -22,16 +90,15 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    cout << "    " << endl;
-
-    display = al_create_display(1350, 1050);
+    //X: 1350   Y:1050
+    display = al_create_display(1350, 1150);
 
     if(!display) {
         fprintf(stderr, "failed to create display!\n");
         return -1;
     }
 
-    al_set_window_position(display, 600, 500);
+    al_set_window_position(display, 600, 300);
 
     al_init_image_addon();
     al_init_primitives_addon();
@@ -57,11 +124,25 @@ int main(int argc, char **argv){
     Game *game = new Game;
     int x = 1150, y = 850;
 
-    ALLEGRO_BITMAP *horse = al_load_bitmap("../resources/horse.png");
-
     while (!running){
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
+
+        if (events.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch (events.keyboard.keycode) {
+                case ALLEGRO_KEY_1:
+                    game->setCurrentAttack(1);
+                    break;
+                case ALLEGRO_KEY_2:
+                    game->setCurrentAttack(2);
+                    break;
+                case ALLEGRO_KEY_3:
+                    game->setCurrentAttack(3);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
             running = true;
@@ -91,21 +172,22 @@ int main(int argc, char **argv){
                     int posy = y / 50;
 
                     cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
-                    game->updateCenter(posx,posy);//Aqui se recalcula el nodo al que tiene q llegar el personaje
+                    if (y < 1050) {
+                        game->updateCenter(posx,posy); //Aqui se recalcula el nodo al que tiene q llegar el personaje
+                    }
                 }
 
-                if (events.type == ALLEGRO_EVENT_MOUSE_AXES ){
+                if (events.type == ALLEGRO_EVENT_MOUSE_AXES) {
                     x = events.mouse.x;
                     y = events.mouse.y;
                 }
             }
 
-            else if (events.timer.source == drawTimer)
-            {
+            else if (events.timer.source == drawTimer) {
                 // Draw
                 al_clear_to_color(al_map_rgb(62, 240, 98));
+                al_draw_filled_rectangle(0, 1050, 1350, 1150, al_map_rgb(0, 0, 113));
                 game->draw();
-                //al_draw_bitmap(horse, (1350 / 2) - 105, (1050 / 2) - 130, 0);
                 al_flip_display();
             }
         }

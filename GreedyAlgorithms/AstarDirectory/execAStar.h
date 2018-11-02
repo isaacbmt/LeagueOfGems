@@ -13,8 +13,8 @@ class execAStar {
 public:
     MapSearchNode mapSearchNode;
     void solution(MapSearchNode nodeStart,MapSearchNode nodeEnd);
-    vector<coordinate> coordenadas;
-
+    vector<coordinate> obtenerCoordenadas(int matrizInterfaz[21][27], MapSearchNode nodoInicio,
+                                                                      MapSearchNode nodoFinal);
 };
 
 

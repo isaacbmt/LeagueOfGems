@@ -11,11 +11,16 @@ Game::Game() {
 
     //player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
+    icon1 = al_load_bitmap("../resources/icon1.png");
+    icon2 = al_load_bitmap("../resources/icon2.png");
+    icon3 = al_load_bitmap("../resources/icon3.png");
+    icon4 = al_load_bitmap("../resources/icon4.png");
+
     x = 0;
     y = 0;
     animationTimer = 0;
     currentAttack = 3;
-    level = 1;
+    level = 2;
 
     createMap();
 
@@ -25,6 +30,8 @@ Game::Game() {
 void Game::update() {
     if (level == 1 && animationTimer % 25 == 0)
         movement1();
+    else if (level == 2 && animationTimer % 25 == 0)
+        movement2();
 
     animationTimer++;
 
@@ -58,10 +65,11 @@ void Game::update() {
 
     //Busca los enemigos muertos
     for (int k = 0; k < enemyList->length(); ++k) {
-        if (enemyList->get(k)->getLife() <= 0){
-            int enemyX = enemyList->get(k)->getPosx();
-            int enemyY = enemyList->get(k)->getPosy();
+        int enemyX = enemyList->get(k)->getPosx();
+        int enemyY = enemyList->get(k)->getPosy();
+        map[enemyY][enemyX] = 3;
 
+        if (enemyList->get(k)->getLife() <= 0){
             map[enemyY][enemyX] = 0;
             explosionList->add(new Explosion(enemyX, enemyY));
             enemyList->remove(k);
@@ -82,6 +90,8 @@ void Game::update() {
 void Game::updateCenter(int x, int y){
     if (level == 1)
         updateLevel1(x, y);
+    else if (level == 2)
+        updateLevel2(x, y);
 }
 
 void Game::updateLevel1(int x, int y) {
@@ -114,28 +124,73 @@ void Game::updateLevel1(int x, int y) {
 //      fila es de 5
         bool flag = true;
 
-        for (int j = 0; j < playersList->length(); j++) {
-            while (flag) {
-                if (izq) {
-                    x--;
-                }
-                else if (der) {
-                    x++;
-                }
+        while (flag) {
+            playersList->get(i)->getDij()->definirPesos(x, y + colum);
 
-                playersList->get(i)->getDij()->definirPesos(x, y + colum);
+            if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
+                playersList->get(i)->targetX = x;
+                playersList->get(i)->targetY = y + colum;
 
-                cout << "X: " << x << endl;
+                flag = false;
+            }
 
-                if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
-                    playersList->get(i)->targetX = x;
-                    playersList->get(i)->targetY = y + colum;
-
-                    flag = false;
-                    break;
-                }
+            if (izq) {
+                x--;
+            }
+            else if (der) {
+                x++;
             }
         }
+
+        if ((i + 1) % 5 == 0) {
+            x = tx;
+
+            if (aba)
+                colum++;
+            else if (arr)
+                colum--;
+        }
+    }
+}
+
+void Game::updateLevel2(int x, int y) {
+    int tx = x, colum = 0;
+    bool izq = false, der = false, aba = false, arr = false;
+
+    if (x >= 6)
+        izq = true;
+    else if (x < 6)
+        der = true;
+
+    if (y > 16)
+        arr = true;
+    else if (y <= 16)
+        aba = true;
+
+    for (int i = 0; i < playersList->length(); ++i) {
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
+
+        bool flag = true;
+
+        while (flag){
+            if (map[y][x] == 0) {
+                MapSearchNode nodeEnd;
+                nodeEnd.x = x;
+                nodeEnd.y = y + colum;
+
+                playersList->get(i)->setAstar(map, nodeEnd);
+                playersList->get(i)->targetX = x;
+                playersList->get(i)->targetY = y  + colum;
+                playersList->get(i)->aIndex = 0;
+                flag = false;
+            }
+
+            if (izq)
+                x--;
+            else if (der)
+                x++;
+        }
+
         if ((i + 1) % 5 == 0) {
             x = tx;
 
@@ -172,6 +227,30 @@ void Game::movement1() {
             playersList->get(i)->update(playersList->get(i)->targetX * 50, playersList->get(i)->targetY * 50);
         }
 
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 2;
+    }
+}
+
+void Game::movement2() {
+    for (int i = 0; i < playersList->length(); ++i) {
+        int nextX, nextY;
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
+
+        if (playersList->get(i)->aIndex < playersList->get(i)->getAstar().size()){
+            nextX = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].x * 50;
+            nextY = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].y * 50;
+        } else {
+            nextX = playersList->get(i)->getPosx() * 50;
+            nextY = playersList->get(i)->getPosy() * 50;
+        }
+
+        if (playersList->get(i)->aIndex >= playersList->get(i)->getAstar().size()){
+            playersList->get(i)->update(playersList->get(i)->targetX * 50, playersList->get(i)->targetY * 50);
+        } else {
+            playersList->get(i)->update(nextX, nextY);
+        }
+
+        playersList->get(i)->aIndex++;
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 2;
     }
 }
@@ -268,7 +347,7 @@ Enemy *Game::searchEnemy(int x, int y) {
 
 void Game::draw() {
     drawMap();
-
+    drawAttackIcons();
     //player->draw();
     for (int m = 0; m < playersList->length(); m++) {
         playersList->get(m)->draw();
@@ -292,6 +371,16 @@ void Game::draw() {
         bulletList->get(l)->draw();
     }
 
+}
+
+void Game::drawAttackIcons() {
+    al_draw_filled_rectangle(525 + 80 * (currentAttack - 1), 1070, 525 + 80 * (currentAttack - 1) + 60, 1130,
+            al_map_rgb(218,165,32));
+
+    al_draw_bitmap(icon1, 525, 1070, 0);
+    al_draw_bitmap(icon2, 605, 1070, 0);
+    al_draw_bitmap(icon3, 685, 1070, 0);
+    al_draw_bitmap(icon4, 765, 1070, 0);
 }
 
 void Game::createPlayers() {
@@ -334,6 +423,7 @@ void Game::createMap() {
 
                 playersList->get(players)->targetX = di;
                 playersList->get(players)->targetY = dj;
+                playersList->get(players)->setDij(map);
                 players++;
                 //player = new Player(di * 50, dj * 50, "../resources/hetalia.png");
             }
@@ -347,6 +437,17 @@ void Game::createMap() {
     }
 
     cout << "Largo: " << playersList->length() << endl;
+}
+
+void Game::setCurrentAttack(int current) {
+    if (currentAttack == 3 && current != 3) {
+        for (int i = 0; i < playersList->length(); ++i) {
+            playersList->get(i)->stopHeal();
+        }
+    }
+
+    currentAttack = current;
+    cout << "Ataque actual: " << currentAttack << endl;
 }
 
 void Game::printM() {

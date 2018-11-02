@@ -171,12 +171,11 @@ Vertice Dijkstra::obtenerSiguienteVertice(){
     aux.posicionXtiles = -1;
     aux.posicionYtiles = -1;
 
-    if (contador < 150) {
-        if(contador < ruta->size()) {
-            aux = ruta->operator[](contador);
-        }
-        contador++;
+    if(contador < ruta->size()) {
+        aux = ruta->operator[](contador);
     }
+    contador++;
+
 
     return aux;
 }
