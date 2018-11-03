@@ -1,15 +1,12 @@
 #include <iostream>
 #include "Enemy.h"
 
-Enemy::Enemy(std::string path) {
-    image = al_load_bitmap(path.c_str());
-}
-
 Enemy::Enemy(int x, int y, std::string path) {
     image = al_load_bitmap(path.c_str());
     this->posx = x;
     this->posy = y;
     this->maxLife = 50;
+    this->attacking = false;
     this->life = 50;
 }
 
@@ -27,6 +24,18 @@ void Enemy::draw() {
 
 void Enemy::getDamage() {
     life -= 4;
+}
+
+void Enemy::startAttack() {
+    attacking = true;
+}
+
+void Enemy::endAttack() {
+    attacking = false;
+}
+
+bool Enemy::isAttacking() {
+    return attacking;
 }
 
 Enemy::~Enemy() {

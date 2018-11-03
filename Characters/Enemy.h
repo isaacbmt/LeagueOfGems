@@ -10,14 +10,14 @@
 
 class Enemy {
 private:
+    ALLEGRO_BITMAP *image;
+    bool attacking;
     int maxLife;
     int life;
     int posx;
     int posy;
-    ALLEGRO_BITMAP *image;
 
 public:
-    Enemy(std::string);
 
     Enemy(int, int, std::string);
 
@@ -28,6 +28,12 @@ public:
     void draw();
 
     void getDamage();
+
+    void startAttack();
+
+    void endAttack();
+
+    bool isAttacking();
 
     int getLife();
 

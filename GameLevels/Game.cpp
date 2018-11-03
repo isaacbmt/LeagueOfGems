@@ -8,6 +8,7 @@ Game::Game() {
     swordList = new LinkedList<Sword *>;
     bulletList = new LinkedList<Bullet *>;
     explosionList = new LinkedList<Explosion *>;
+    laserList = new LinkedList<Laser *>;
 
     //player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
@@ -24,7 +25,7 @@ Game::Game() {
 
     createMap();
 
-    dij = Dijkstra(map);// A esta clase nadamas se le debe pazar la matriz del mapa al iniciarla
+    dij = Dijkstra(map);// A esta clase nadamas se le debe pasar la matriz del mapa al iniciarla
 }
 
 void Game::update() {
@@ -42,49 +43,31 @@ void Game::update() {
     else if (currentAttack == 3 && animationTimer % 250 == 0)
         attack3();
 
-    for (int i = 0; i < swordList->length(); ++i) {
-        if (!swordList->get(i)->isAttacking())
-            swordList->remove(i);
-    }
+    enemysAttacks();
 
-    for (int j = 0; j < explosionList->length(); ++j) {
-        if (explosionList->get(j)->getPivotY() == 2)
-            explosionList->remove(j);
-    }
+    if (animationTimer % 28 == 0) {
+        for (int i = 0; i < laserList->length(); ++i) {
+            bool isAttacking = false;
 
-    for (int l = 0; l < bulletList->length(); ++l) {
-        if (bulletList->get(l)->getTimer() == 1)
-            bulletList->remove(l);
-        else if (map[bulletList->get(l)->getY() / 50][bulletList->get(l)->getX() / 50] == 3){
-            Enemy * tmp = searchEnemy(bulletList->get(l)->getX() / 50, bulletList->get(l)->getY() / 50);
-            if (tmp != nullptr)
-                tmp->getDamage();
-            bulletList->remove(l);
+            for (int j = 0; j < playersList->length(); ++j) {
+                if (laserList->get(i)->damage(playersList->get(j)))
+                    isAttacking = true;
+            }
+
+            if (!isAttacking) {
+                laserList->get(i)->getEnemy()->endAttack();
+                laserList->remove(i);
+            }
         }
     }
 
-    //Busca los enemigos muertos
-    for (int k = 0; k < enemyList->length(); ++k) {
-        int enemyX = enemyList->get(k)->getPosx();
-        int enemyY = enemyList->get(k)->getPosy();
-        map[enemyY][enemyX] = 3;
-
-        if (enemyList->get(k)->getLife() <= 0){
-            map[enemyY][enemyX] = 0;
-            explosionList->add(new Explosion(enemyX, enemyY));
-            enemyList->remove(k);
+    for (int k = 0; k < playersList->length(); ++k) {
+        if (playersList->get(k)->getPosx() == gem->getPosx() && playersList->get(k)->getPosy() == gem->getPosy()) {
+            gem->isAcquired = true;
         }
     }
 
-    for (int m = 0; m < playersList->length(); ++m) {
-        if (playersList->get(m)->getLife() <= 0){
-            int playerX = playersList->get(m)->getPosx();
-            int playerY = playersList->get(m)->getPosy();
-
-            map[playerY][playerX] = 0;
-            playersList->remove(m);
-        }
-    }
+    deleteObjectInGame();
 }
 
 void Game::updateCenter(int x, int y){
@@ -130,10 +113,8 @@ void Game::updateLevel1(int x, int y) {
             if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
                 playersList->get(i)->targetX = x;
                 playersList->get(i)->targetY = y + colum;
-
                 flag = false;
             }
-
             if (izq) {
                 x--;
             }
@@ -156,7 +137,7 @@ void Game::updateLevel1(int x, int y) {
 void Game::updateLevel2(int x, int y) {
     int tx = x, colum = 0;
     bool izq = false, der = false, aba = false, arr = false;
-
+    printM();
     if (x >= 6)
         izq = true;
     else if (x < 6)
@@ -173,7 +154,7 @@ void Game::updateLevel2(int x, int y) {
         bool flag = true;
 
         while (flag){
-            if (map[y][x] == 0) {
+            if (map[y + colum][x] == 0) {
                 MapSearchNode nodeEnd;
                 nodeEnd.x = x;
                 nodeEnd.y = y + colum;
@@ -193,7 +174,6 @@ void Game::updateLevel2(int x, int y) {
 
         if ((i + 1) % 5 == 0) {
             x = tx;
-
             if (aba)
                 colum++;
             else if (arr)
@@ -329,6 +309,38 @@ void Game::attack2() {
     }
 }
 
+void Game::enemysAttacks() {
+    for (int i = 0; i < enemyList->length(); ++i) {
+        for (int j = 0; j < playersList->length(); ++j) {
+            int robotX = enemyList->get(i)->getPosx();
+            int robotY = enemyList->get(i)->getPosy();
+
+            for (int k = 0; k < 6; ++k) {
+                if (map[robotY][robotX + k] == 2){
+                    if (!enemyList->get(i)->isAttacking()) {
+                        laserList->add(new Laser(robotX * 50, robotY * 50, 0, enemyList->get(i)));
+                    }
+                }
+                if (map[robotY][robotX - (k + 1)] == 2){
+                    if (!enemyList->get(i)->isAttacking()) {
+                        laserList->add(new Laser(robotX * 50, robotY * 50, 1, enemyList->get(i)));
+                    }
+                }
+                if (map[robotY - (k + 1)][robotX] == 2){
+                    if (!enemyList->get(i)->isAttacking()) {
+                        laserList->add(new Laser(robotX * 50, robotY * 50, 2, enemyList->get(i)));
+                    }
+                }
+                if (map[robotY + k][robotX] == 2){
+                    if (!enemyList->get(i)->isAttacking()) {
+                        laserList->add(new Laser(robotX * 50, robotY * 50, 3, enemyList->get(i)));
+                    }
+                }
+            }
+        }
+    }
+}
+
 void Game::attack3() {
     for (int i = 0; i < playersList->length(); ++i) {
         playersList->get(i)->heal();
@@ -341,14 +353,13 @@ Enemy *Game::searchEnemy(int x, int y) {
             return enemyList->get(i);
         }
     }
-
     return nullptr;
 }
 
 void Game::draw() {
     drawMap();
     drawAttackIcons();
-    //player->draw();
+
     for (int m = 0; m < playersList->length(); m++) {
         playersList->get(m)->draw();
     }
@@ -371,6 +382,12 @@ void Game::draw() {
         bulletList->get(l)->draw();
     }
 
+    for (int n = 0; n < laserList->length(); ++n) {
+        if (laserList->get(n) != nullptr)
+           laserList->get(n)->draw();
+    }
+
+    gem->draw();
 }
 
 void Game::drawAttackIcons() {
@@ -411,12 +428,16 @@ void Game::createMap() {
         for (int di = 0; di < 27; di++) {
             random = std::rand() % 100;
 
-            if(random > 90 && enemys != 0 && dj != 0){
+            if (dj == 2 && di == 2) {
+                gem = new Gem(di, dj, "../resources/diamondSprite.png");
+                map[dj][di] = 0;
+            }
+            else if(random > 90 && enemys != 0 && dj != 0) {
                 map[dj][di] = 3;
                 enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
                 enemys -= 1;
             }
-            else if (16 < di && di < 22 && 16 < dj && dj < 20){
+            else if (16 < di && di < 22 && 16 < dj && dj < 20) {
                 map[dj][di] = 2;
                 //playersList->add(new Player(di * 50, dj * 50, "../resources/hetalia.png"));
                 playersList->add(new Player(di * 50, dj * 50, "../resources/sprite" + to_string(players) + ".png"));
@@ -427,10 +448,10 @@ void Game::createMap() {
                 players++;
                 //player = new Player(di * 50, dj * 50, "../resources/hetalia.png");
             }
-            else if (random > 88){
+            else if (random > 88) {
                 map[dj][di] = 1;
             }
-            else{
+            else {
                 map[dj][di] = 0;
             }
         }
@@ -448,6 +469,52 @@ void Game::setCurrentAttack(int current) {
 
     currentAttack = current;
     cout << "Ataque actual: " << currentAttack << endl;
+}
+
+void Game::deleteObjectInGame() {
+    for (int i = 0; i < swordList->length(); ++i) {
+        if (!swordList->get(i)->isAttacking())
+            swordList->remove(i);
+    }
+
+    for (int j = 0; j < explosionList->length(); ++j) {
+        if (explosionList->get(j)->getPivotY() == 2)
+            explosionList->remove(j);
+    }
+
+    for (int l = 0; l < bulletList->length(); ++l) {
+        if (bulletList->get(l)->getTimer() == 1)
+            bulletList->remove(l);
+        else if (map[bulletList->get(l)->getY() / 50][bulletList->get(l)->getX() / 50] == 3){
+            Enemy * tmp = searchEnemy(bulletList->get(l)->getX() / 50, bulletList->get(l)->getY() / 50);
+            if (tmp != nullptr)
+                tmp->getDamage();
+            bulletList->remove(l);
+        }
+    }
+
+    //Busca los enemigos muertos
+    for (int k = 0; k < enemyList->length(); ++k) {
+        int enemyX = enemyList->get(k)->getPosx();
+        int enemyY = enemyList->get(k)->getPosy();
+        map[enemyY][enemyX] = 3;
+
+        if (enemyList->get(k)->getLife() <= 0){
+            map[enemyY][enemyX] = 0;
+            explosionList->add(new Explosion(enemyX, enemyY));
+            enemyList->remove(k);
+        }
+    }
+
+    for (int m = 0; m < playersList->length(); ++m) {
+        if (playersList->get(m)->getLife() <= 0){
+            int playerX = playersList->get(m)->getPosx();
+            int playerY = playersList->get(m)->getPosy();
+
+            map[playerY][playerX] = 0;
+            playersList->remove(m);
+        }
+    }
 }
 
 void Game::printM() {
@@ -469,5 +536,7 @@ Game::~Game(){
     delete explosionList;
     delete swordList;
     delete bulletList;
+    delete laserList;
+    delete gem;
     al_destroy_bitmap(tiles);
 }

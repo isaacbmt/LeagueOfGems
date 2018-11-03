@@ -8,6 +8,8 @@
 #include "../Characters/Explosion.h"
 #include "../Characters/Sword.h"
 #include "../Characters/Bullet.h"
+#include "../Characters/Laser.h"
+#include "../Characters/Gem.h"
 
 class Game {
 private:
@@ -16,12 +18,15 @@ private:
     LinkedList<Explosion *> *explosionList;
     LinkedList<Sword *> *swordList;
     LinkedList<Bullet *> *bulletList;
+    LinkedList<Laser *> *laserList;
+
 
     ALLEGRO_BITMAP *tiles;
     ALLEGRO_BITMAP *icon1;
     ALLEGRO_BITMAP *icon2;
     ALLEGRO_BITMAP *icon3;
     ALLEGRO_BITMAP *icon4;
+    Gem *gem;
     //Player *player;
     int x;
     int y;
@@ -56,11 +61,15 @@ public:
 
     void attack3();
 
+    void enemysAttacks();
+
     Enemy * searchEnemy(int, int);
 
     void draw();
 
     void drawAttackIcons();
+
+    void deleteObjectInGame();
 
     void setCurrentAttack(int);
 

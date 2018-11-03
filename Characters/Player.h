@@ -53,6 +53,8 @@ public:
 
     bool isAttacking();
 
+    void getDamage();
+
     Dijkstra *getDij();
 
     void setDij(int [21][27]);

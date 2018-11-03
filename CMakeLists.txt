@@ -13,7 +13,7 @@ add_executable(LeagueOfGems main.cpp Characters/Player.cpp Characters/Player.h G
         GreedyAlgorithms/AstarDirectory/AStarSearch.h GreedyAlgorithms/AstarDirectory/MapSearchNode.cpp
         GreedyAlgorithms/AstarDirectory/MapSearchNode.h GreedyAlgorithms/AstarDirectory/execAStar.cpp
         GreedyAlgorithms/AstarDirectory/execAStar.h GreedyAlgorithms/AstarDirectory/globalArray.cpp
-        GreedyAlgorithms/AstarDirectory/globalArray.h GreedyAlgorithms/AstarDirectory/coordinate.h)
+        GreedyAlgorithms/AstarDirectory/globalArray.h GreedyAlgorithms/AstarDirectory/coordinate.h Characters/Laser.cpp Characters/Laser.h Characters/Gem.cpp Characters/Gem.h)
 
 
 target_link_libraries(LeagueOfGems -lallegro -lallegro_font -lallegro_image -lallegro_ttf -lallegro_color
