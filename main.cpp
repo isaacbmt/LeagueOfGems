@@ -55,13 +55,33 @@ int main(int argc, char **argv){
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_timer_event_source(drawTimer));
 
+
+
+    al_reserve_samples(6);
+
+
+    ALLEGRO_SAMPLE *EtimusSound = al_load_sample("../resources/Etimus.wav");
+    ALLEGRO_SAMPLE *EspartaSound = al_load_sample("../resources/Esparta.wav");
+    ALLEGRO_SAMPLE *AUSound = al_load_sample("../resources/AU.wav");
+    ALLEGRO_SAMPLE *ChoiceSound = al_load_sample("../resources/Button.wav");
+    ALLEGRO_SAMPLE *Intro = al_load_sample("../resources/Cancion.ogg");
+
+
+    ALLEGRO_SAMPLE_INSTANCE *IntroInstance = al_create_sample_instance(Intro);
+    al_set_sample_instance_playmode(IntroInstance, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_sample_instance_to_mixer(IntroInstance, al_get_default_mixer());
+
+    al_play_sample_instance(IntroInstance);
     al_start_timer(timer);
     al_start_timer(drawTimer);
 
     Game *game = new Game;
+    al_play_sample_instance(IntroInstance);
+
     int x = 1150, y = 850;
 
     while (!running){
+        al_play_sample_instance(IntroInstance);
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
 
@@ -78,11 +98,16 @@ int main(int argc, char **argv){
                 al_get_keyboard_state(&keyState);
                 if (al_key_down(&keyState, ALLEGRO_KEY_1)) {
                     game->setCurrentAttack(1);
+                    al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+
+
                 }
                 else if (al_key_down(&keyState, ALLEGRO_KEY_2)) {
+                    al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
                     game->setCurrentAttack(2);
                 }
                 else if (al_key_down(&keyState, ALLEGRO_KEY_3)) {
+                    al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
                     game->setCurrentAttack(3);
                 }
 
@@ -95,6 +120,8 @@ int main(int argc, char **argv){
                 }
                 else if (state.buttons & 2) {
                     // GreedyAlgorithms
+                    al_play_sample(EtimusSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+
                     x = state.x;
                     y = state.y;
 
@@ -105,8 +132,15 @@ int main(int argc, char **argv){
 
                     cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
                     if (y < 1050) {
+
                         game->updateCenter(posx,posy); //Aqui se recalcula el nodo al que tiene q llegar el personaje
+                        al_play_sample(EspartaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+                        //al_play_sample(AUSound,3.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+
+
+
                     }
+
                 }
 
                 if (events.type == ALLEGRO_EVENT_MOUSE_AXES) {
@@ -129,6 +163,8 @@ int main(int argc, char **argv){
     al_destroy_display(display);
     al_uninstall_mouse();
     al_uninstall_keyboard();
+    al_destroy_sample(Intro);
+    al_destroy_sample_instance(IntroInstance);
     al_destroy_event_queue(event_queue);
 
 //AGREGADO POR GABRIEL

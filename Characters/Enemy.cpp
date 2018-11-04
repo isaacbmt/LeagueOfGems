@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Enemy.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 Enemy::Enemy(int x, int y, std::string path) {
     image = al_load_bitmap(path.c_str());

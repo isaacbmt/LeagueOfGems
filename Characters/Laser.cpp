@@ -1,5 +1,6 @@
 #include "Laser.h"
-
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 Laser::Laser(int xi, int yi, int direction, Enemy *enemy) {
     this->laser = al_load_bitmap("../resources/laserRed.png");
     this->enemy = enemy;

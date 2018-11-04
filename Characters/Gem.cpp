@@ -1,4 +1,6 @@
 #include "Gem.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 Gem::Gem(int x, int y, int max, int index, std::string path) {
     this->gemImage = al_load_bitmap(path.c_str());

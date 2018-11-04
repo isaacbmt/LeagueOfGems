@@ -1,6 +1,8 @@
 #include <allegro5/allegro.h>
 #include <ctime>
 #include "Game.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 Game::Game() {
     playersList = new LinkedList<Player *>;
@@ -30,6 +32,8 @@ Game::Game() {
 }
 
 void Game::update() {
+    ALLEGRO_SAMPLE *GemaSound = al_load_sample("../resources/GEMA.wav");
+    al_reserve_samples(1);
     int tmpLevel = level;
 
     if (level == 1 && animationTimer % 25 == 0)
@@ -85,6 +89,8 @@ void Game::update() {
 
     if (level != tmpLevel) {
         createNextMap();
+        al_play_sample(GemaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+
     }
 }
 
