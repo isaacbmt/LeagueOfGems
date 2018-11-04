@@ -1,49 +1,8 @@
 #include "../Characters/Enemy.h"
+#include "Node.h"
 #include <iostream>
 
 using namespace std;
-
-template <class S>
-class Node{
-public:
-    /// Constructor
-    /// \param data Dato que almacena el nodo.
-    Node(S data){
-        this->data = data;
-        next = nullptr;
-    }
-
-    Node(){
-        next = nullptr;
-    }
-
-    /// Da valor al nodo siguiente.
-    /// \param next El nodo siguiente.
-    void setNext(Node<S> *next){
-        this->next = next;
-    }
-
-    /// Obtiene el nodo siguiente.
-    /// \return El siguiente nodo.
-    Node<S> *getNext(){
-        return next;
-    }
-
-    /// Obitiene el valor del nodo.
-    /// \return El dato del nodo.
-    S getData(){
-        return data;
-    }
-
-    ~Node(){
-        next = nullptr;
-        data = NULL;
-    }
-
-private:
-    Node<S> *next;
-    S data;
-};
 
 template <class T>
 class LinkedList {

@@ -31,7 +31,6 @@ public:
      */
 
     AlgoritmoGen() {
-
         oleada = new LinkedListGen<LinkedListGen<int>>();
         oleada_copia = new LinkedListGen<LinkedListGen<int>>();
         ListaOleadas = new LinkedListGen<LinkedListGen<LinkedListGen<int>>>();
