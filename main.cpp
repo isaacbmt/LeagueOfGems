@@ -12,6 +12,11 @@
 #include "GreedyAlgorithms/AstarDirectory/MapSearchNode.h"
 #include "GreedyAlgorithms/AstarDirectory/coordinate.h"
 
+//AGREGADO POR GABRIEL
+#include "DataStructures/AlgoritmoGen.h"
+//AGREGADO POR GABRIEL
+using namespace std;
+
 int main(int argc, char **argv){
     ALLEGRO_DISPLAY *display;
     bool running = false;
@@ -125,5 +130,12 @@ int main(int argc, char **argv){
     al_uninstall_mouse();
     al_uninstall_keyboard();
     al_destroy_event_queue(event_queue);
+
+//AGREGADO POR GABRIEL
+    AlgoritmoGen *X;
+    X = new AlgoritmoGen();
+    X->CreaOleadas(1);
+//AGREGADO POR GABRIEL
+
     return 0;
 }
