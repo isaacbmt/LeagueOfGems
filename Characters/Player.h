@@ -10,6 +10,7 @@
 #include "../GreedyAlgorithms/AstarDirectory/coordinate.h"
 #include "../GreedyAlgorithms/AstarDirectory/MapSearchNode.h"
 #include "../GreedyAlgorithms/AstarDirectory/execAStar.h"
+#include "../GreedyAlgorithms/Kruskal.h"
 
 class Player {
 private:
@@ -18,6 +19,7 @@ private:
     Dijkstra *dij;
     vector<coordinate> aStar;
     execAStar ejecutable = ejecutable;
+    Kruskal *kruscal;
     int x;
     int y;
     int direction;
@@ -57,7 +59,11 @@ public:
 
     Dijkstra *getDij();
 
-    void setDij(int [21][27]);
+    Kruskal *getKruskal();
+
+    void initGreedy(int [21][27]);
+
+    void setMapOnGreedy(int [21][27]);
 
     void setAstar(int [21][27], MapSearchNode);
 

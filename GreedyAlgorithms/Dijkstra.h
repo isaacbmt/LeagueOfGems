@@ -43,6 +43,8 @@ public:
 
     Dijkstra(){}
 
+    void setMap(int mapa[21][27]);
+
     void definirPesos(int x, int y);
 
     int definirRutaOptima(int x, int y);

@@ -40,6 +40,7 @@ int main(int argc, char **argv){
     al_install_mouse();
     al_install_keyboard();
 
+    ALLEGRO_KEYBOARD_STATE keyState;
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / 60);
     ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 60);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
@@ -59,22 +60,6 @@ int main(int argc, char **argv){
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
 
-        if (events.type == ALLEGRO_EVENT_KEY_DOWN) {
-            switch (events.keyboard.keycode) {
-                case ALLEGRO_KEY_1:
-                    game->setCurrentAttack(1);
-                    break;
-                case ALLEGRO_KEY_2:
-                    game->setCurrentAttack(2);
-                    break;
-                case ALLEGRO_KEY_3:
-                    game->setCurrentAttack(3);
-                    break;
-                default:
-                    break;
-            }
-        }
-
         if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
             running = true;
         }
@@ -84,6 +69,17 @@ int main(int argc, char **argv){
             {
                 // Update
                 game->update();
+
+                al_get_keyboard_state(&keyState);
+                if (al_key_down(&keyState, ALLEGRO_KEY_1)) {
+                    game->setCurrentAttack(1);
+                }
+                else if (al_key_down(&keyState, ALLEGRO_KEY_2)) {
+                    game->setCurrentAttack(2);
+                }
+                else if (al_key_down(&keyState, ALLEGRO_KEY_3)) {
+                    game->setCurrentAttack(3);
+                }
 
                 ALLEGRO_MOUSE_STATE state;
                 al_get_mouse_state(&state);

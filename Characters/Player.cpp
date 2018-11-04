@@ -139,8 +139,18 @@ Dijkstra *Player::getDij() {
     return dij;
 }
 
-void Player::setDij(int map[21][27]) {
+Kruskal *Player::getKruskal() {
+    return kruscal;
+}
+
+void Player::initGreedy(int map[21][27]) {
     dij = new Dijkstra(map);
+    kruscal = new Kruskal(map);
+}
+
+void Player::setMapOnGreedy(int map[21][27]) {
+    kruscal->setMap(map);
+    dij->setMap(map);
 }
 
 Player::~Player() {

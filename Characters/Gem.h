@@ -11,11 +11,13 @@ private:
     int x;
     int y;
     int pivot;
+    int maxPivot;
+    int index;
     int animationTimer;
 public:
     bool isAcquired;
 
-    Gem(int x, int y, std::string path);
+    Gem(int x, int y, int max, int index, std::string path);
     void draw();
     int getPosx();
     int getPosy();

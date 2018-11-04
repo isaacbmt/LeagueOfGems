@@ -40,6 +40,7 @@ bool Enemy::isAttacking() {
 
 Enemy::~Enemy() {
     al_destroy_bitmap(image);
+    attacking = false;
 }
 
 int Enemy::getLife() {

@@ -1,9 +1,11 @@
 #include "Gem.h"
 
-Gem::Gem(int x, int y, std::string path) {
+Gem::Gem(int x, int y, int max, int index, std::string path) {
     this->gemImage = al_load_bitmap(path.c_str());
     this->x = x * 50;
     this->y = y * 50;
+    this->index = index;
+    this->maxPivot = max;
     this->pivot = 0;
     this->animationTimer = 0;
     this->isAcquired = false;
@@ -15,10 +17,10 @@ void Gem::draw() {
     animationTimer++;
     if (animationTimer % 10 == 0) {
         pivot++;
-        if (pivot == 6)
+        if (pivot == maxPivot)
             pivot = 0;
         if (isAcquired) {
-            x = 100;
+            x = 50 + index * 50;
             y = 1075;
         }
     }

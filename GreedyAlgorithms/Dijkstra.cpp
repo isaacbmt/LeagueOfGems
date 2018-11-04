@@ -1,3 +1,6 @@
+//
+// Created by luisk on 24/10/18.
+//
 #include "Dijkstra.h"
 
 bool Dijkstra::definirCentro(int x,int y){
@@ -76,6 +79,11 @@ Vertice Dijkstra::retornarVecinoMenor(int posicionX, int posicionY, double peso)
 
 
 Dijkstra::Dijkstra(int mapa[FilasMapa][ColumnasMapa]){
+
+}
+
+void Dijkstra::setMap(int mapa[21][27]) {
+    verticesMapa->clear();
     for (int y = 0; y < FilasMapa; y++){
         for (int x = 0; x < ColumnasMapa; x++){
             if(mapa[y][x] == 0) {

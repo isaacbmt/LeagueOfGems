@@ -19,7 +19,7 @@ private:
     LinkedList<Sword *> *swordList;
     LinkedList<Bullet *> *bulletList;
     LinkedList<Laser *> *laserList;
-
+    LinkedList<Gem *> *gemList;
 
     ALLEGRO_BITMAP *tiles;
     ALLEGRO_BITMAP *icon1;
@@ -38,38 +38,37 @@ private:
 
     void createPlayers();
     void drawMap();
-    void createMap();
+    void createFirstMap();
+    void createNextMap();
 
-public:
-    Game();//Hice un cambio en este metodo
-
-    void update();//Y en este metodo tambien XD
-
-    void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
-
-    void updateLevel1(int, int);
-
-    void updateLevel2(int, int);
+    void updateLevel1(int x, int y, bool arr, bool aba, bool der, bool izq);
+    void updateLevel2(int x, int y, bool arr, bool aba, bool der, bool izq);
+    void updateLevel3(int x, int y, bool arr, bool aba, bool der, bool izq);
 
     void movement1();
-
     void movement2();
+    void movement3();
 
     void attack1();
-
     void attack2();
-
     void attack3();
-
-    void enemysAttacks();
 
     Enemy * searchEnemy(int, int);
 
-    void draw();
+    void enemysAttacks();
 
     void drawAttackIcons();
-
     void deleteObjectInGame();
+
+public:
+
+    Game();//Hice un cambio en este metodo
+
+    void update();//Y en este metodo tambien
+
+    void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
+
+    void draw();
 
     void setCurrentAttack(int);
 

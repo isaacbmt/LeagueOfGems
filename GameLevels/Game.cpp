@@ -9,6 +9,7 @@ Game::Game() {
     bulletList = new LinkedList<Bullet *>;
     explosionList = new LinkedList<Explosion *>;
     laserList = new LinkedList<Laser *>;
+    gemList = new LinkedList<Gem *>;
 
     //player = new Player("../resources/hetalia.png");
     tiles = al_load_bitmap("../resources/medievaltiles.png");
@@ -21,18 +22,22 @@ Game::Game() {
     y = 0;
     animationTimer = 0;
     currentAttack = 3;
-    level = 2;
+    level = 1;
 
-    createMap();
+    createFirstMap();
 
     dij = Dijkstra(map);// A esta clase nadamas se le debe pasar la matriz del mapa al iniciarla
 }
 
 void Game::update() {
+    int tmpLevel = level;
+
     if (level == 1 && animationTimer % 25 == 0)
         movement1();
     else if (level == 2 && animationTimer % 25 == 0)
         movement2();
+    else if (level == 3 && animationTimer % 25 == 0)
+        movement3();
 
     animationTimer++;
 
@@ -61,29 +66,29 @@ void Game::update() {
         }
     }
 
-    for (int k = 0; k < playersList->length(); ++k) {
-        if (playersList->get(k)->getPosx() == gem->getPosx() && playersList->get(k)->getPosy() == gem->getPosy()) {
-            gem->isAcquired = true;
+    bool flag = true;
+    for (int k = 0; k < playersList->length(); k++) {
+        for (int i = 0; i < level; i++) {
+            if (gemList->get(i)->getPosx() == playersList->get(k)->getPosx()
+            && gemList->get(i)->getPosy() == playersList->get(k)->getPosy() && !gemList->get(i)->isAcquired) {
+                gemList->get(i)->isAcquired = true;
+                level++;
+                flag = false;
+                break;
+            }
         }
+        if (!flag)
+            break;
     }
 
     deleteObjectInGame();
+
+    if (level != tmpLevel) {
+        createNextMap();
+    }
 }
 
 void Game::updateCenter(int x, int y){
-    if (level == 1)
-        updateLevel1(x, y);
-    else if (level == 2)
-        updateLevel2(x, y);
-}
-
-void Game::updateLevel1(int x, int y) {
-    int xPlayer, yPlayer;
-
-    this->x = x;
-    this->y = y;
-    int tx = x, colum = 0;
-
     bool izq = false, der = false, aba = false, arr = false;
     if (x >= 6)
         izq = true;
@@ -95,24 +100,35 @@ void Game::updateLevel1(int x, int y) {
     else if (y <= 16)
         aba = true;
 
-    for (int i = 0; i < playersList->length(); i++)
-    {
+    if (level == 1)
+        updateLevel1(x, y, arr, aba, der, izq);
+    else if (level == 2)
+        updateLevel2(x, y, arr, aba, der, izq);
+    else if (level == 3)
+        updateLevel3(x, y, arr, aba, der, izq);
+}
+
+void Game::updateLevel1(int x, int y, bool arr, bool aba, bool der, bool izq) {
+    int xPlayer, yPlayer;
+    this->x = x;
+    this->y = y;
+    int tx = x, column = 0;
+
+    for (int i = 0; i < playersList->length(); i++) {
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
 
-        playersList->get(i)->setDij(map);
+        playersList->get(i)->setMapOnGreedy(map);
 
         xPlayer = playersList->get(i)->getPosx();//posicion actual del jugador
         yPlayer = playersList->get(i)->getPosy();
 
-//      fila es de 5
         bool flag = true;
-
         while (flag) {
-            playersList->get(i)->getDij()->definirPesos(x, y + colum);
+            playersList->get(i)->getDij()->definirPesos(x, y + column);
 
             if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
                 playersList->get(i)->targetX = x;
-                playersList->get(i)->targetY = y + colum;
+                playersList->get(i)->targetY = y + column;
                 flag = false;
             }
             if (izq) {
@@ -122,31 +138,58 @@ void Game::updateLevel1(int x, int y) {
                 x++;
             }
         }
-
         if ((i + 1) % 5 == 0) {
             x = tx;
-
             if (aba)
-                colum++;
+                column++;
             else if (arr)
-                colum--;
+                column--;
         }
     }
 }
 
-void Game::updateLevel2(int x, int y) {
-    int tx = x, colum = 0;
-    bool izq = false, der = false, aba = false, arr = false;
-    printM();
-    if (x >= 6)
-        izq = true;
-    else if (x < 6)
-        der = true;
+void Game::updateLevel3(int x, int y, bool arr, bool aba, bool der, bool izq) {
+    int xPlayer, yPlayer;
+    bool flag;
+    this->x = x;
+    this->y = y;
+    int tx = x, column = 0;
 
-    if (y > 16)
-        arr = true;
-    else if (y <= 16)
-        aba = true;
+    for (int i = 0; i < playersList->length(); i++) {
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
+        playersList->get(i)->setMapOnGreedy(map);
+
+        xPlayer = playersList->get(i)->getPosx();
+        yPlayer = playersList->get(i)->getPosy();
+
+        flag = true;
+        while(flag) {
+            if (map[y + column][x] == 0) {
+                playersList->get(i)->getKruskal()->definirCamino(x, y + column, xPlayer, yPlayer);
+                playersList->get(i)->targetX = x;
+                playersList->get(i)->targetY = y + column;
+                flag = false;
+            }
+            if (izq) {
+                x--;
+            }
+            else if (der) {
+                x++;
+            }
+        }
+        if ((i + 1) % 5 == 0) {
+            x = tx;
+            if (aba)
+                column++;
+            else if (arr)
+                column--;
+        }
+    }
+
+}
+
+void Game::updateLevel2(int x, int y, bool arr, bool aba, bool der, bool izq) {
+    int tx = x, column = 0;
 
     for (int i = 0; i < playersList->length(); ++i) {
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
@@ -154,14 +197,14 @@ void Game::updateLevel2(int x, int y) {
         bool flag = true;
 
         while (flag){
-            if (map[y + colum][x] == 0) {
+            if (map[y + column][x] == 0) {
                 MapSearchNode nodeEnd;
                 nodeEnd.x = x;
-                nodeEnd.y = y + colum;
+                nodeEnd.y = y + column;
 
                 playersList->get(i)->setAstar(map, nodeEnd);
                 playersList->get(i)->targetX = x;
-                playersList->get(i)->targetY = y  + colum;
+                playersList->get(i)->targetY = y  + column;
                 playersList->get(i)->aIndex = 0;
                 flag = false;
             }
@@ -175,9 +218,9 @@ void Game::updateLevel2(int x, int y) {
         if ((i + 1) % 5 == 0) {
             x = tx;
             if (aba)
-                colum++;
+                column++;
             else if (arr)
-                colum--;
+                column--;
         }
     }
 }
@@ -211,12 +254,40 @@ void Game::movement1() {
     }
 }
 
+void Game::movement3() {
+    for (int i = 0; i < playersList->length(); i++) {
+        int nextX, nextY;
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
+
+        Kruskal *finder = playersList->get(i)->getKruskal();
+
+        if (finder != nullptr) {
+            Nodo next = finder->obtenerSiguienteVertice();
+            nextX = (next.posicionX) * 50;
+            nextY = (next.posicionY) * 50;
+        }
+        else {
+            nextX = playersList->get(i)->getPosx() * 50;
+            nextY = playersList->get(i)->getPosy() * 50;
+        }
+
+        if(nextX != -50) {
+            playersList->get(i)->update(nextX, nextY);
+        }
+        else {
+            playersList->get(i)->update(playersList->get(i)->targetX * 50, playersList->get(i)->targetY * 50);
+        }
+
+        map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 2;
+    }
+}
+
 void Game::movement2() {
     for (int i = 0; i < playersList->length(); ++i) {
         int nextX, nextY;
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
 
-        if (playersList->get(i)->aIndex < playersList->get(i)->getAstar().size()){
+        if (playersList->get(i)->aIndex < playersList->get(i)->getAstar().size()) {
             nextX = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].x * 50;
             nextY = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].y * 50;
         } else {
@@ -224,7 +295,7 @@ void Game::movement2() {
             nextY = playersList->get(i)->getPosy() * 50;
         }
 
-        if (playersList->get(i)->aIndex >= playersList->get(i)->getAstar().size()){
+        if (playersList->get(i)->aIndex >= playersList->get(i)->getAstar().size()) {
             playersList->get(i)->update(playersList->get(i)->targetX * 50, playersList->get(i)->targetY * 50);
         } else {
             playersList->get(i)->update(nextX, nextY);
@@ -374,6 +445,11 @@ void Game::draw() {
         explosionList->get(j)->draw();
     }
 
+    for (int n = 0; n < laserList->length(); n++) {
+        if (laserList->get(n) != nullptr)
+            laserList->get(n)->draw();
+    }
+
     for (int k = 0; k < swordList->length(); k++) {
         swordList->get(k)->draw();
     }
@@ -382,12 +458,9 @@ void Game::draw() {
         bulletList->get(l)->draw();
     }
 
-    for (int n = 0; n < laserList->length(); ++n) {
-        if (laserList->get(n) != nullptr)
-           laserList->get(n)->draw();
+    for (int g = 0; g < level; g++) {
+        gemList->get(g)->draw();
     }
-
-    gem->draw();
 }
 
 void Game::drawAttackIcons() {
@@ -405,22 +478,42 @@ void Game::createPlayers() {
 }
 
 void Game::drawMap() {
+    int xObstaculo = 0, yObstaculo = 0, xTile = 0, yTile = 0;
+
+    if (level == 1) {
+        xObstaculo = 1;
+        yObstaculo = 4;
+        xTile = 1;
+        yTile = 2;
+    }
+    else if (level == 2) {
+        xObstaculo = 2;
+        yObstaculo = 1;
+        xTile = 0;
+        yTile = 5;
+    }
+    else if (level == 3) {
+        xObstaculo = 1;
+        yObstaculo = 0;
+        xTile = 4;
+        yTile = 5;
+    }
+
     for (int i = 0; i < 27; ++i) {
         for (int j = 0; j < 21; ++j) {
-
             if (map[j][i] == 1){
-                al_draw_bitmap_region(tiles, 50 * 1, 50 * 4, 50, 50,
+                al_draw_bitmap_region(tiles, 50 * xObstaculo, 50 * yObstaculo, 50, 50,
                                       50 * i, 50 * j, 0);
             }
             else{
-                al_draw_bitmap_region(tiles, 50 * 1, 50 * 2, 50, 50,
+                al_draw_bitmap_region(tiles, 50 * xTile, 50 * yTile, 50, 50,
                                       50 * i, 50 * j, 0);
             }
         }
     }
 }
 
-void Game::createMap() {
+void Game::createFirstMap() {
     std::srand(std::time(0));
     int random, enemys = 4, players = 0;
 
@@ -429,7 +522,14 @@ void Game::createMap() {
             random = std::rand() % 100;
 
             if (dj == 2 && di == 2) {
-                gem = new Gem(di, dj, "../resources/diamondSprite.png");
+                for (int i = 0; i < 4; i++) {
+                    if (i == 0)
+                        gemList->add(new Gem(di, dj, 6, i, "../resources/gem" + to_string(i + 1) +".png"));
+                    else if (i == 1)
+                        gemList->add(new Gem(di, dj, 8, i, "../resources/gem" + to_string(i + 1) +".png"));
+                    else
+                        gemList->add(new Gem(di, dj, 4, i, "../resources/gem" + to_string(i + 1) +".png"));
+                }
                 map[dj][di] = 0;
             }
             else if(random > 90 && enemys != 0 && dj != 0) {
@@ -444,7 +544,7 @@ void Game::createMap() {
 
                 playersList->get(players)->targetX = di;
                 playersList->get(players)->targetY = dj;
-                playersList->get(players)->setDij(map);
+                playersList->get(players)->initGreedy(map);
                 players++;
                 //player = new Player(di * 50, dj * 50, "../resources/hetalia.png");
             }
@@ -456,19 +556,56 @@ void Game::createMap() {
             }
         }
     }
+}
 
-    cout << "Largo: " << playersList->length() << endl;
+void Game::createNextMap() {
+    playersList->clear();
+    enemyList->clear();
+    laserList->clear();
+
+    std::srand(std::time(0));
+    int random, enemys = 4, players = 0;
+
+    for (int j = 0; j < 21; j++) {
+        for (int i = 0; i < 27; i++) {
+            random = std::rand() % 100;
+
+            if (i == 2 && j == 2) {
+                map[j][i] = 0;
+            } else if (random > 90 && enemys != 0 && j != 0) {
+                map[j][i] = 3;
+                enemyList->add(new Enemy(i, j, "../resources/enemy" + to_string(level) + ".png"));
+                enemys -= 1;
+            } else if (16 < i && i < 22 && 16 < j && j < 20) {
+                map[j][i] = 2;
+                //playersList->add(new Player(di * 50, dj * 50, "../resources/hetalia.png"));
+                playersList->add(new Player(i * 50, j * 50, "../resources/sprite" + to_string(players) + ".png"));
+
+                playersList->get(players)->targetX = i;
+                playersList->get(players)->targetY = j;
+                playersList->get(players)->initGreedy(map);
+                players++;
+            }
+            else if (random > 88) {
+                map[j][i] = 1;
+            }
+            else {
+                map[j][i] = 0;
+            }
+        }
+    }
 }
 
 void Game::setCurrentAttack(int current) {
-    if (currentAttack == 3 && current != 3) {
-        for (int i = 0; i < playersList->length(); ++i) {
-            playersList->get(i)->stopHeal();
+    if (currentAttack != current) {
+        if (currentAttack == 3 && current != 3) {
+            for (int i = 0; i < playersList->length(); ++i) {
+                playersList->get(i)->stopHeal();
+            }
         }
+        currentAttack = current;
+        cout << "Ataque actual: " << currentAttack << endl;
     }
-
-    currentAttack = current;
-    cout << "Ataque actual: " << currentAttack << endl;
 }
 
 void Game::deleteObjectInGame() {

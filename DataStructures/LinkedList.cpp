@@ -75,7 +75,7 @@ public:
 
     /// Remueve un nodo de la lista.
     /// \param index Indice del elemento que va a eliminar.
-    void remove(int index){
+    void remove(int index) {
         if (index == 0){
             Node<T> *tmp;
             tmp = head;
@@ -102,10 +102,20 @@ public:
         }
     }
 
+    void clear() {
+        Node<T> *tmp;
+        for (int i = 0; i < size; ++i) {
+            tmp = head;
+            head = head->getNext();
+            delete tmp;
+        }
+        size = 0;
+    }
+
     /// Obtiene un valor de la lista.
     /// \param index Indice del elemento en la lista.
     /// \return El valor del elemento en la lista.
-    T get(int index){
+    T get(int index) {
         Node<T> *tmp = head;
         for (int i = 0; i < index; ++i) {
             tmp = tmp->getNext();
@@ -115,7 +125,7 @@ public:
 
     /// Obtiene el largo de la lista.
     /// \return El largo de la lista.
-    int length(){
+    int length() {
         return size;
     }
 
