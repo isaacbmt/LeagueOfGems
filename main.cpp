@@ -163,9 +163,9 @@ int main(int argc, char **argv){
     al_destroy_event_queue(event_queue);
 
 //AGREGADO POR GABRIEL
-    AlgoritmoGen *X;
-    X = new AlgoritmoGen();
-    X->CreaOleadas(1);
+//    AlgoritmoGen *X;
+//    X = new AlgoritmoGen();
+//    X->CreaOleadas(1);
 
 //AGREGADO POR GABRIEL
 

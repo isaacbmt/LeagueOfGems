@@ -1,13 +1,13 @@
-#include "../Characters/Enemy.h"
+#ifndef LEAGUEOFGEMS_LINKEDLIST_H
+#define LEAGUEOFGEMS_LINKEDLIST_H
+
 #include "Node.h"
-#include <iostream>
 
 using namespace std;
 
 template <class T>
 class LinkedList {
 public:
-
     /// Constructor.
     LinkedList(){
         head = nullptr;
@@ -96,3 +96,5 @@ private:
     Node<T> *head;
     int size;
 };
+
+#endif //LEAGUEOFGEMS_LINKEDLIST_H

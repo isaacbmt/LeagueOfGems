@@ -7,7 +7,7 @@
 
 
 #include "LinkedListGen.h"
-#include "LinkedList.cpp"
+#include "LinkedList.h"
 #include "../Characters/Enemy.h"
 #include <iostream>
 #include<stdlib.h> //Esto es para generar numeros random
@@ -40,8 +40,6 @@ public:
         ListaOleadas = new LinkedListGen<LinkedListGen<LinkedListGen<int>>>();
         fitness = 0;
     }
-
-
 
     /**
      * CreaOleadas

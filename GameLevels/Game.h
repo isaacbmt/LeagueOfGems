@@ -1,7 +1,7 @@
 #ifndef LEAGUEOFGEMS_GAME_H
 #define LEAGUEOFGEMS_GAME_H
 
-#include "../DataStructures/LinkedList.cpp"
+#include "../DataStructures/LinkedList.h"
 #include "../Characters/Player.h"
 #include "../Characters/Enemy.h"
 #include "../GreedyAlgorithms/Dijkstra.h"
