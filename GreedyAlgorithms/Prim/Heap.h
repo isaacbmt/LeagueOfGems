@@ -5,7 +5,6 @@
 #ifndef LEAGUEOFGEMS_HEAP_H
 #define LEAGUEOFGEMS_HEAP_H
 
-
 template<typename T>
 struct nodeHeap {
     T data;
@@ -56,7 +55,5 @@ T Heap<T>::pop() {
     this->lenght--;
     return aux->data;
 }
-
-
 
 #endif //LEAGUEOFGEMS_HEAP_H

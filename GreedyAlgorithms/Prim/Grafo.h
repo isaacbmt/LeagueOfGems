@@ -11,26 +11,28 @@
 
 using namespace std;
 
-struct Vertice {
+struct VerticePrim {
     int fila, columna, peso = 0;
-    vector<Vertice> *arista;
-    Vertice() = default;
-    Vertice(int fila, int columna, int peso) {
+    vector<VerticePrim> *arista;
+    VerticePrim() = default;
+    VerticePrim(int fila, int columna, int peso) {
         this->fila = fila;
         this->columna = columna;
         this->peso = peso;
-        arista = new vector<Vertice>();
+        arista = new vector<VerticePrim>();
     }
 };
 
 
 class Grafo {
 public:
-    vector<Vertice> vertices;
+    vector<VerticePrim> vertices;
     int num = 0;
     bool addVertice(int fila, int columna);
     bool addArista(int fila, int columna, int filaAdy, int columnaAdy);
-    Vertice getVertice(int fila, int columna);
+    VerticePrim getVertice(int fila, int columna);
     void mostrarGrafo();
 };
+
+
 #endif //LEAGUEOFGEMS_GRAFO_H

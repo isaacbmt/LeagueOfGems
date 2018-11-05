@@ -1,5 +1,12 @@
+#include <utility>
+
+#include <utility>
+
+#include <utility>
+
 #include "Player.h"
 #include "../GreedyAlgorithms/AstarDirectory/execAStar.h"
+#include "../GreedyAlgorithms/Prim/PrimSolver.h"
 
 #include <allegro5/allegro_image.h>
 #include <allegro5/bitmap.h>
@@ -13,6 +20,7 @@ Player::Player(std::string image) {
     this->life = 45;
     this->aIndex = 0;
     this->aLength = 0;
+    this->healX = 0;
     attack = false;
     healing = false;
 }
@@ -27,6 +35,8 @@ Player::Player(int x, int y, std::string image) {
     this->life = 45;
     this->aIndex = 0;
     this->aLength = 0;
+    this->direction = 0;
+    this->healX = 0;
     attack = false;
     healing = false;
 }
@@ -153,8 +163,17 @@ void Player::setMapOnGreedy(int map[21][27]) {
     dij->setMap(map);
 }
 
+void Player::setPathToPrim(Grafo grafo, int destinoX, int destinoY) {
+    this->grafo = grafo;
+    PrimSolver solver;
+    prim = solver.prim(getPosx(), getPosy(), destinoX, destinoY, grafo);
+}
+
 Player::~Player() {
     al_destroy_bitmap(image);
+    al_destroy_bitmap(healImg);
+    delete dij;
+    delete kruscal;
 }
 
 int Player::getALength() const {

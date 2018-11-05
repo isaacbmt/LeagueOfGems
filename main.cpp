@@ -132,13 +132,8 @@ int main(int argc, char **argv){
 
                     cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
                     if (y < 1050) {
-
-                        game->updateCenter(posx,posy); //Aqui se recalcula el nodo al que tiene q llegar el personaje
-                        al_play_sample(EspartaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
-                        //al_play_sample(AUSound,3.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
-
-
-
+                        game->updateCenter(posx, posy); //Aqui se recalcula el nodo al que tiene q llegar el personaje
+                        al_play_sample(EspartaSound, 6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
                     }
 
                 }
@@ -171,6 +166,7 @@ int main(int argc, char **argv){
     AlgoritmoGen *X;
     X = new AlgoritmoGen();
     X->CreaOleadas(1);
+
 //AGREGADO POR GABRIEL
 
     return 0;

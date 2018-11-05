@@ -28,6 +28,10 @@ void Enemy::getDamage() {
     life -= 4;
 }
 
+void Enemy::setPower(int newPower) {
+    this->power = newPower;
+}
+
 void Enemy::startAttack() {
     attacking = true;
 }

@@ -1,3 +1,5 @@
+#include <utility>
+
 //AGREGADO POR GABRIEL
 
 #ifndef LEAGUEOFGEMS_ALGORITMOGEN_H
@@ -5,6 +7,8 @@
 
 
 #include "LinkedListGen.h"
+#include "LinkedList.cpp"
+#include "../Characters/Enemy.h"
 #include <iostream>
 #include<stdlib.h> //Esto es para generar numeros random
 #include<time.h> //Esto es para generar numeros random
@@ -132,8 +136,6 @@ public:
         return (resultado);
     }
 
-
-
     /**
    * CambiaPeor
    * @param lista
@@ -157,14 +159,13 @@ public:
             }
         }
 
-        oleada_copia->set_Data(posicion_a_borrar,*Mutaciones(*SeleccionaMejores(*oleada_copia)));
+        oleada_copia->set_Data(posicion_a_borrar, *Mutaciones(*SeleccionaMejores(*oleada_copia)));
 
         for (int i=0;i<oleada_copia->length();i++){
             resultado_final.add(oleada_copia->get(i));
         }
         return resultado_final ;
     }
-
 
     /**
      * suma_caracteristicas
@@ -240,6 +241,12 @@ public:
         }
         return *temporal1;
     }
+
+//    LinkedList<Enemy> ListaDeEnemigos(int x, int y, string path, int numero_oleada) {
+//        Enemy *enemigo = new Enemy(x, y, std::move(path));
+//        enemigo->setPower(ListaOleadas->get(numero_oleada).get(0).get(0));
+//
+//    }
 };
 
 #endif //LEAGUEOFGEMS_ALGORITMOGEN_H

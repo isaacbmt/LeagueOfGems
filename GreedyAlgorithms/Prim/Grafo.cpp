@@ -11,14 +11,14 @@ bool Grafo::addVertice(int fila, int columna) {
             return false;
         }
     }
-    this->vertices.push_back(Vertice(fila, columna, 0));
+    this->vertices.push_back(VerticePrim(fila, columna, 0));
     num++;
     return true;
 }
 
 bool Grafo::addArista(int fila, int columna, int filaAdy, int columnaAdy) {
-    Vertice aux;
-    Vertice auxAdy;
+    VerticePrim aux;
+    VerticePrim auxAdy;
     for (int i = 0; i < this->vertices.size(); i++) {
         aux = vertices.at(i);
         if (aux.fila == fila && aux.columna == columna) {
@@ -36,8 +36,8 @@ bool Grafo::addArista(int fila, int columna, int filaAdy, int columnaAdy) {
     return true;
 }
 
-Vertice Grafo::getVertice(int fila, int columna) {
-    Vertice temp;
+VerticePrim Grafo::getVertice(int fila, int columna) {
+    VerticePrim temp;
     for (int i = 0; i < vertices.size(); i++) {
         temp = vertices.at(i);
         if (temp.fila == fila && temp.columna == columna) {
@@ -47,8 +47,8 @@ Vertice Grafo::getVertice(int fila, int columna) {
 }
 
 void Grafo::mostrarGrafo() {
-    Vertice temp;
-    Vertice temp2;
+    VerticePrim temp;
+    VerticePrim temp2;
     for (int i = 0; i < vertices.size(); i++) {
         temp = vertices.at(i);
         cout << "El vertice (" << temp.fila << ", " << temp.columna << ")" << endl;

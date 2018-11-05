@@ -4,13 +4,12 @@
 
 #include "PrimSolver.h"
 
-#include "PrimSolver.h"
 
 Heap<pair<int, int>> PrimSolver::prim(int columnaActual, int filaActual, int objColumna, int objFila, Grafo grafis){
     this->grafo = grafis;
-    vector<Vertice> queue;
-    Vertice current = this->grafo.getVertice(filaActual, columnaActual);
-    Vertice temp;
+    vector<VerticePrim> queue;
+    VerticePrim current = this->grafo.getVertice(filaActual, columnaActual);
+    VerticePrim temp;
     visitados.push_back(current);
 
     queue.push_back(current);
@@ -38,7 +37,7 @@ Heap<pair<int, int>> PrimSolver::prim(int columnaActual, int filaActual, int obj
     return pilaGenerador(filaActual, columnaActual, objFila, objColumna, prev);
 }
 
-bool PrimSolver::isVisitado(Vertice vertice) {
+bool PrimSolver::isVisitado(VerticePrim vertice) {
     for (int i = 0; i < visitados.size(); i++) {
         if (visitados.at(i).columna == vertice.columna && visitados.at(i).fila == vertice.fila) {
             return true;

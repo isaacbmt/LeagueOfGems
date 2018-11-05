@@ -30,8 +30,8 @@ struct finalPath{
 class PrimSolver {
 private:
     Grafo grafo;
-    vector<Vertice> visitados;
-    bool isVisitado(Vertice vertice);
+    vector<VerticePrim> visitados;
+    bool isVisitado(VerticePrim vertice);
     Heap<pair<int,int>> pilaGenerador(int fila, int columna, int objFila, int objColumna, vector<finalPath> heapis);
     finalPath encontrarPrevPath(int prevFila, int prevColumna, vector<finalPath> path);
 
@@ -40,6 +40,5 @@ public:
 
 
 };
-
 
 #endif //LEAGUEOFGEMS_PRIMSOLVER_H

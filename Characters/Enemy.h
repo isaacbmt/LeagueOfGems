@@ -12,6 +12,7 @@ class Enemy {
 private:
     ALLEGRO_BITMAP *image;
     bool attacking;
+    int power;
     int maxLife;
     int life;
     int posx;
@@ -26,6 +27,8 @@ public:
     void update(int, int);
 
     void draw();
+
+    void setPower(int);
 
     void getDamage();
 

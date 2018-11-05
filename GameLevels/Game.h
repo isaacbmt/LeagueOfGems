@@ -10,6 +10,7 @@
 #include "../Characters/Bullet.h"
 #include "../Characters/Laser.h"
 #include "../Characters/Gem.h"
+#include "../DataStructures/AlgoritmoGen.h"
 
 class Game {
 private:
@@ -20,34 +21,34 @@ private:
     LinkedList<Bullet *> *bulletList;
     LinkedList<Laser *> *laserList;
     LinkedList<Gem *> *gemList;
+    AlgoritmoGen *generic;
 
     ALLEGRO_BITMAP *tiles;
     ALLEGRO_BITMAP *icon1;
     ALLEGRO_BITMAP *icon2;
     ALLEGRO_BITMAP *icon3;
     ALLEGRO_BITMAP *icon4;
-    Gem *gem;
-    //Player *player;
-    int x;
-    int y;
+
     int map[21][27];
-    Dijkstra dij = Dijkstra();//Agregue esta variable
     int animationTimer;
     int currentAttack;
     int level;
+    int x;
+    int y;
 
-    void createPlayers();
-    void drawMap();
     void createFirstMap();
     void createNextMap();
+    void drawMap();
 
     void updateLevel1(int x, int y, bool arr, bool aba, bool der, bool izq);
     void updateLevel2(int x, int y, bool arr, bool aba, bool der, bool izq);
     void updateLevel3(int x, int y, bool arr, bool aba, bool der, bool izq);
+    void updateLevel4(int x, int y, bool arr, bool aba, bool der, bool izq);
 
     void movement1();
     void movement2();
     void movement3();
+    void movement4();
 
     void attack1();
     void attack2();
@@ -61,17 +62,11 @@ private:
     void deleteObjectInGame();
 
 public:
-
     Game();//Hice un cambio en este metodo
-
-    void update();//Y en este metodo tambien
-
     void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
-
+    void update();//Y en este metodo tambien
     void draw();
-
     void setCurrentAttack(int);
-
     void printM();
 
     ~Game();

@@ -23,4 +23,5 @@ public:
 };
 
 
+
 #endif //LEAGUEOFGEMS_GENERADORGRAFO_H
