@@ -61,7 +61,7 @@ public:
 
     bool isAttacking();
 
-    void getDamage();
+    void getDamage(int);
 
     Dijkstra *getDij();
 

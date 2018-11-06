@@ -32,6 +32,7 @@ private:
     int map[21][27];
     int animationTimer;
     int currentAttack;
+    int numero_oleada;
     int level;
     int x;
     int y;

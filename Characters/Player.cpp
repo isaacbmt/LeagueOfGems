@@ -96,8 +96,8 @@ void Player::attacking() {
     attack = true;
 }
 
-void Player::getDamage() {
-    life -= 2;
+void Player::getDamage(int enemyPower) {
+    life -= enemyPower;
 }
 
 int Player::getDirection() const {

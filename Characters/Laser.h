@@ -11,11 +11,12 @@ class Laser {
 private:
     ALLEGRO_BITMAP *laser;
     Enemy *enemy;
-    int xi;
-    int yi;
-    int pivot;
     int animationTimer;
     int direction;
+    int power;
+    int pivot;
+    int xi;
+    int yi;
 
 public:
     bool isAttacking;

@@ -3,13 +3,22 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
+Enemy::Enemy(std::string path) {
+    image = al_load_bitmap(path.c_str());
+    this->posx = 0;
+    this->posy = 0;
+//    this->maxLife = 50;
+//    this->life = 50;
+    this->attacking = false;
+}
+
 Enemy::Enemy(int x, int y, std::string path) {
     image = al_load_bitmap(path.c_str());
     this->posx = x;
     this->posy = y;
-    this->maxLife = 50;
+//    this->maxLife = 50;
+//    this->life = 50;
     this->attacking = false;
-    this->life = 50;
 }
 
 void Enemy::update(int dx, int dy) {
@@ -28,8 +37,19 @@ void Enemy::getDamage() {
     life -= 4;
 }
 
+int Enemy::getPower() {
+    return power;
+}
+
+void Enemy::setVida(int vida) {
+    this->maxLife = vida;
+    this->life = vida;
+    std::cout << "Vida:  " << vida << "\n" << std::endl;
+}
+
 void Enemy::setPower(int newPower) {
     this->power = newPower;
+    std::cout << "Power:  " << newPower << std::endl;
 }
 
 void Enemy::startAttack() {

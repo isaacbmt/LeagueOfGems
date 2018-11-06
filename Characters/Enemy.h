@@ -20,6 +20,8 @@ private:
 
 public:
 
+    Enemy(std::string);
+
     Enemy(int, int, std::string);
 
     ~Enemy();
@@ -29,6 +31,10 @@ public:
     void draw();
 
     void setPower(int);
+
+    int getPower();
+
+    void setVida(int);
 
     void getDamage();
 

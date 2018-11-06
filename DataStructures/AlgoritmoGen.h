@@ -59,7 +59,7 @@ public:
             fitness = suma_caracteristicas(*SeleccionaMejores(*oleada));
             ListaOleadas->add(*oleada);
 
-            while (fitness < 50) {
+            while (fitness < 150) {
                 ListaOleadas->add(CambiaPeor(*oleada_copia));
                 fitness = suma_caracteristicas(*SeleccionaMejores(*oleada_copia));
             }
@@ -74,7 +74,7 @@ public:
             fitness = suma_caracteristicas(*SeleccionaMejores(*oleada));
             ListaOleadas->add(*oleada);
 
-            while (fitness < 100) {
+            while (fitness < 250) {
                 ListaOleadas->add(CambiaPeor(*oleada_copia));
                 fitness = suma_caracteristicas(*SeleccionaMejores(*oleada_copia));
             }
@@ -89,7 +89,7 @@ public:
             fitness = suma_caracteristicas(*SeleccionaMejores(*oleada));
             ListaOleadas->add(*oleada);
 
-            while (fitness < 200) {
+            while (fitness < 350) {
                 ListaOleadas->add(CambiaPeor(*oleada_copia));
                 fitness = suma_caracteristicas(*SeleccionaMejores(*oleada_copia));
             }
@@ -235,16 +235,28 @@ public:
         LinkedListGen<int> *temporal1=new LinkedListGen<int>();
 
         for (int i = 0; i < 4; i++) {
-            temporal1->add(1+rand()% 4);
+            if (i == 3) {
+                temporal1->add(25 + rand()% 30);
+            }
+            else {
+                temporal1->add(1+rand()% 4);
+            }
         }
         return *temporal1;
     }
 
-//    LinkedList<Enemy> ListaDeEnemigos(int x, int y, string path, int numero_oleada) {
-//        Enemy *enemigo = new Enemy(x, y, std::move(path));
-//        enemigo->setPower(ListaOleadas->get(numero_oleada).get(0).get(0));
-//
-//    }
+    LinkedList<Enemy *> *ListaDeEnemigos(string path, int numero_oleada) {
+        LinkedList<Enemy *> *ListaEnemigos = new LinkedList<Enemy *>;
+
+        for (int i = 0; i < ListaOleadas->get(numero_oleada).length(); i++) {
+            Enemy *enemy = new Enemy(path);
+            enemy->setPower(ListaOleadas->get(numero_oleada).get(i).get(0));
+            enemy->setVida(ListaOleadas->get(numero_oleada).get(i).get(3));
+            ListaEnemigos->add(enemy);
+        }
+
+        return ListaEnemigos;
+    }
 };
 
 #endif //LEAGUEOFGEMS_ALGORITMOGEN_H

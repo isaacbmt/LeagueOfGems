@@ -21,6 +21,7 @@ public:
     int getTimer();
     int getX();
     int getY();
+    ~Bullet();
 };
 
 

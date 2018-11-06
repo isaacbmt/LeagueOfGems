@@ -8,6 +8,7 @@ Laser::Laser(int xi, int yi, int direction, Enemy *enemy) {
     this->yi = yi;
     this->direction = direction;
     this->pivot = 0;
+    this->power = enemy->getPower();
     this->isAttacking = true;
     enemy->startAttack();
 }
@@ -43,22 +44,25 @@ bool Laser::damage(Player *player) {
 
     for (int i = 0; i < 6; ++i) {
         if (direction == 0 && xi / 50 + i == playerX && playerY == yi / 50) {
-            player->getDamage();
+            player->getDamage(power);
             isAttacking = true;
         }
         else if (direction == 1 && xi / 50 - (i + 1) == playerX && playerY == yi / 50) {
-            player->getDamage();
+            player->getDamage(power);
             isAttacking = true;
         }
         else if (direction == 2 && xi / 50 == playerX && yi / 50 - (i + 1) == playerY) {
-            player->getDamage();
+            player->getDamage(power);
             isAttacking = true;
         }
         else if (direction == 3 && xi / 50 == playerX && yi / 50 + i == playerY) {
-            player->getDamage();
+            player->getDamage(power);
             isAttacking = true;
         }
         else {
+            isAttacking = false;
+        }
+        if (!enemy->isAttacking()) {
             isAttacking = false;
         }
     }

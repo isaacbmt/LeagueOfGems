@@ -21,7 +21,7 @@ Game::Game() {
     icon3 = al_load_bitmap("../resources/icon3.png");
     icon4 = al_load_bitmap("../resources/icon4.png");
 
-//    generic->CreaOleadas(1);
+    generic->CreaOleadas(1);
     animationTimer = 0;
     currentAttack = 3;
     level = 1;
@@ -64,7 +64,6 @@ void Game::update() {
                 if (laserList->get(i)->damage(playersList->get(j)))
                     isAttacking = true;
             }
-
             if (!isAttacking) {
                 laserList->get(i)->getEnemy()->endAttack();
                 laserList->remove(i);
@@ -91,7 +90,7 @@ void Game::update() {
 
     if (level != tmpLevel) {
         createNextMap();
-        al_play_sample(GemaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+        al_play_sample(GemaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
 
     }
 }
@@ -595,8 +594,9 @@ void Game::drawMap() {
 
 void Game::createFirstMap() {
     std::srand(std::time(0));
-    int random, enemys = 5, players = 0;
-
+    int random, enemys = 0, players = 0;
+    cout << "Level: " << level << "\n" << endl;
+    enemyList = generic->ListaDeEnemigos("../resources/enemy1.png", level - 1);
     for (int dj = 0; dj < 21; dj++) {
         for (int di = 0; di < 27; di++) {
             random = std::rand() % 100;
@@ -612,10 +612,12 @@ void Game::createFirstMap() {
                 }
                 map[dj][di] = 0;
             }
-            else if(random > 95 && enemys != 0 && dj != 0) {
+            //Cantidad de enemigos.         aqui
+            else if(random > 95 && enemys != 5 && dj != 0) {
                 map[dj][di] = 3;
-                enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
-                enemys -= 1;
+                //enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
+                enemyList->get(enemys)->update(di, dj);
+                enemys += 1;
             }
             else if (16 < di && di < 22 && 16 < dj && dj < 20) {
                 map[dj][di] = 2;
@@ -641,9 +643,11 @@ void Game::createNextMap() {
         enemyList->clear();
         laserList->clear();
     }
+    cout << "Level: " << level << "\n" << endl;
+    enemyList = generic->ListaDeEnemigos("../resources/enemy" + to_string(level) + ".png", level - 1);
 
     std::srand(std::time(0));
-    int random, enemys = 5, players = 0;
+    int random, enemys = 0, players = 0;
 
     for (int j = 0; j < 21; j++) {
         for (int i = 0; i < 27; i++) {
@@ -651,10 +655,12 @@ void Game::createNextMap() {
 
             if (i == 2 && j == 2) {
                 map[j][i] = 0;
-            } else if (random > 95 && enemys != 0 && j != 0) {
+            }
+            //Cantidad de enemigos.         aqui
+            else if (random > 95 && enemys != 5 && j != 0) {
                 map[j][i] = 3;
-                enemyList->add(new Enemy(i, j, "../resources/enemy" + to_string(level) + ".png"));
-                enemys -= 1;
+                enemyList->get(enemys)->update(i, j);
+                enemys += 1;
             } else if (16 < i && i < 22 && 16 < j && j < 20) {
                 map[j][i] = 2;
                 playersList->add(new Player(i * 50, j * 50, "../resources/sprite" + to_string(players) + ".png"));
