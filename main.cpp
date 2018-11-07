@@ -65,7 +65,8 @@ int main(int argc, char **argv){
     ALLEGRO_SAMPLE *AUSound = al_load_sample("../resources/AU.wav");
     ALLEGRO_SAMPLE *ChoiceSound = al_load_sample("../resources/Button.wav");
     ALLEGRO_SAMPLE *Intro = al_load_sample("../resources/Cancion.ogg");
-
+    ALLEGRO_BITMAP *winImage = al_load_bitmap("../resources/win.png");
+    ALLEGRO_BITMAP *loseImage = al_load_bitmap("../resources/gameover.png");
 
     ALLEGRO_SAMPLE_INSTANCE *IntroInstance = al_create_sample_instance(Intro);
     al_set_sample_instance_playmode(IntroInstance, ALLEGRO_PLAYMODE_LOOP);
@@ -90,65 +91,67 @@ int main(int argc, char **argv){
         }
         else if(events.type == ALLEGRO_EVENT_TIMER)
         {
-            if (events.timer.source == timer)
-            {
-                // Update
-                game->update();
+            if (events.timer.source == timer) {
+                //Still playing
+                cout << game->getState() << endl;
+                if (game->getState() == 0) {
+                    // Update
+                    game->update();
 
-                al_get_keyboard_state(&keyState);
-                if (al_key_down(&keyState, ALLEGRO_KEY_1)) {
-                    game->setCurrentAttack(1);
-                    al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
+                    al_get_keyboard_state(&keyState);
+                    if (al_key_down(&keyState, ALLEGRO_KEY_1)) {
+                        game->setCurrentAttack(1);
+                        al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
 
 
-                }
-                else if (al_key_down(&keyState, ALLEGRO_KEY_2)) {
-                    al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
-                    game->setCurrentAttack(2);
-                }
-                else if (al_key_down(&keyState, ALLEGRO_KEY_3)) {
-                    al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
-                    game->setCurrentAttack(3);
-                }
-
-                ALLEGRO_MOUSE_STATE state;
-                al_get_mouse_state(&state);
-
-                if (state.buttons & 1) {
-                    x = state.x;
-                    y = state.y;
-                }
-                else if (state.buttons & 2) {
-                    // GreedyAlgorithms
-                    al_play_sample(EtimusSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE,0 );
-
-                    x = state.x;
-                    y = state.y;
-
-                    cout << "Pathfindeo" << endl;
-
-                    int posx = x / 50;
-                    int posy = y / 50;
-
-                    cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
-                    if (y < 1050) {
-                        game->updateCenter(posx, posy); //Aqui se recalcula el nodo al que tiene q llegar el personaje
-                        al_play_sample(EspartaSound, 6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                    }
+                    else if (al_key_down(&keyState, ALLEGRO_KEY_2)) {
+                        al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                        game->setCurrentAttack(2);
+                    }
+                    else if (al_key_down(&keyState, ALLEGRO_KEY_3)) {
+                        al_play_sample(ChoiceSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                        game->setCurrentAttack(3);
                     }
 
+                    ALLEGRO_MOUSE_STATE state;
+                    al_get_mouse_state(&state);
+
+                    if (state.buttons & 2) {
+                        // GreedyAlgorithms
+                        al_play_sample(EtimusSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+
+                        x = state.x;
+                        y = state.y;
+
+                        int posx = x / 50;
+                        int posy = y / 50;
+
+                        cout << "Mover hacia: " << "[" << posx << ", " << posy << "]" << endl;
+                        if (y < 1050) {
+                            game->updateCenter(posx, posy); //Aqui se recalcula el nodo al que tiene q llegar el personaje
+                            al_play_sample(EspartaSound, 6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                        }
+                    }
                 }
 
-                if (events.type == ALLEGRO_EVENT_MOUSE_AXES) {
-                    x = events.mouse.x;
-                    y = events.mouse.y;
-                }
+                //Lose
             }
 
             else if (events.timer.source == drawTimer) {
                 // Draw
                 al_clear_to_color(al_map_rgb(62, 240, 98));
                 al_draw_filled_rectangle(0, 1050, 1350, 1150, al_map_rgb(0, 0, 113));
-                game->draw();
+                if (game->getState() == 0) {
+                    game->draw();
+                }
+                if (game->getState() == 1) {
+                    al_draw_bitmap(loseImage, 0, 0, 0);
+                }
+                    // won
+                else if (game->getState() == 2) {
+                    al_draw_bitmap(winImage, 0, 0, 0);
+                }
                 al_flip_display();
             }
         }

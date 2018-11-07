@@ -34,6 +34,7 @@ private:
     int currentAttack;
     int numero_oleada;
     int level;
+    int defeated;
     int x;
     int y;
 
@@ -68,6 +69,7 @@ public:
     void update();//Y en este metodo tambien
     void draw();
     void setCurrentAttack(int);
+    int getState();
     void printM();
 
     ~Game();

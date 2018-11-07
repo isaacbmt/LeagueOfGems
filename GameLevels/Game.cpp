@@ -24,6 +24,7 @@ Game::Game() {
     generic->CreaOleadas(1);
     animationTimer = 0;
     currentAttack = 3;
+    defeated = 0;
     level = 1;
     x = 0;
     y = 0;
@@ -85,12 +86,20 @@ void Game::update() {
         if (!flag)
             break;
     }
-
     deleteObjectInGame();
 
+    if (playersList->length() == 0) {
+        defeated = 1;
+    }
+
     if (level != tmpLevel) {
-        createNextMap();
-        al_play_sample(GemaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+        if (level == 5) {
+            defeated = 2;
+        }
+        else {
+            createNextMap();
+            al_play_sample(GemaSound,6.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+        }
 
     }
 }
@@ -131,9 +140,10 @@ void Game::updateLevel1(int x, int y, bool arr, bool aba, bool der, bool izq) {
         bool flag = true;
 
         while (flag) {
-            playersList->get(i)->getDij()->definirPesos(x, y + column);
 
-            if (playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer) == 1) {
+            if (map[y + column][x] == 0) {
+                playersList->get(i)->getDij()->definirPesos(x, y + column);
+                playersList->get(i)->getDij()->definirRutaOptima(xPlayer, yPlayer);
                 playersList->get(i)->targetX = x;
                 playersList->get(i)->targetY = y + column;
                 flag = false;
@@ -735,6 +745,10 @@ void Game::deleteObjectInGame() {
             playersList->remove(m);
         }
     }
+}
+
+int Game::getState() {
+    return defeated;
 }
 
 void Game::printM() {
