@@ -318,6 +318,7 @@ void Game::movement2() {
         if (playersList->get(i)->aIndex < playersList->get(i)->getAstar().size()) {
             nextX = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].x * 50;
             nextY = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].y * 50;
+            cout << "Soldado" << i + 1 << ":  {X = " << nextX / 50 << ", " << "Y = " << nextY / 50 << "}" << endl;
         }
         else {
             nextX = playersList->get(i)->getPosx() * 50;
@@ -346,6 +347,8 @@ void Game::movement3() {
             Nodo next = finder->obtenerSiguienteVertice();
             nextX = (next.posicionX) * 50;
             nextY = (next.posicionY) * 50;
+            if (nextX != -50)
+                cout << "Soldado " << i + 1 << ":  {X = " << nextX / 50 << ", " << "Y = " << nextY / 50 << "}" << endl;
         }
         else {
             nextX = playersList->get(i)->getPosx() * 50;
@@ -371,6 +374,7 @@ void Game::movement4() {
         if (playersList->get(i)->prim.getLenght() != 0) {
             nextX = playersList->get(i)->prim.head->data.second * 50;
             nextY = playersList->get(i)->prim.head->data.first * 50;
+            cout << "Soldado" << i + 1 << ":  {X = " << nextX / 50 << ", " << "Y = " << nextY / 50 << "}" << endl;
             playersList->get(i)->prim.pop();
         }
         else {

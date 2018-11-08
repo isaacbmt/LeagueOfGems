@@ -85,6 +85,7 @@ int main(int argc, char **argv){
     int x = 1150, y = 850;
     int operation = 1;
 
+    // Menu
     while(!on) {
         ALLEGRO_EVENT events2;
         al_wait_for_event(event_queue, &events2);
@@ -113,12 +114,11 @@ int main(int argc, char **argv){
                 al_flip_display();
             }
         }
-
-
     }
 
     Game *game = new Game(operation);
 
+    // Juego
     while (!running){
         al_play_sample_instance(IntroInstance);
         ALLEGRO_EVENT events;
@@ -171,8 +171,6 @@ int main(int argc, char **argv){
                         }
                     }
                 }
-
-                //Lose
             }
 
             else if (events.timer.source == drawTimer) {
