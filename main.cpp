@@ -48,14 +48,14 @@ int main(int argc, char **argv){
     ALLEGRO_KEYBOARD_STATE keyState;
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / 60);
     ALLEGRO_TIMER *drawTimer = al_create_timer(1.0 / 60);
+    ALLEGRO_TIMER *menuTimer = al_create_timer(1.0 / 60);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_timer_event_source(drawTimer));
-
-
+    al_register_event_source(event_queue, al_get_timer_event_source(menuTimer));
 
     al_reserve_samples(6);
 
@@ -67,6 +67,8 @@ int main(int argc, char **argv){
     ALLEGRO_SAMPLE *Intro = al_load_sample("../resources/Cancion.ogg");
     ALLEGRO_BITMAP *winImage = al_load_bitmap("../resources/win.png");
     ALLEGRO_BITMAP *loseImage = al_load_bitmap("../resources/gameover.png");
+    ALLEGRO_BITMAP *titule = al_load_bitmap("../resources/titule.png");
+    ALLEGRO_BITMAP *option = al_load_bitmap("../resources/options.png");
 
     ALLEGRO_SAMPLE_INSTANCE *IntroInstance = al_create_sample_instance(Intro);
     al_set_sample_instance_playmode(IntroInstance, ALLEGRO_PLAYMODE_LOOP);
@@ -75,11 +77,47 @@ int main(int argc, char **argv){
     al_play_sample_instance(IntroInstance);
     al_start_timer(timer);
     al_start_timer(drawTimer);
+    al_start_timer(menuTimer);
 
-    Game *game = new Game;
     al_play_sample_instance(IntroInstance);
 
+    bool on = false;
     int x = 1150, y = 850;
+    int operation = 1;
+
+    while(!on) {
+        ALLEGRO_EVENT events2;
+        al_wait_for_event(event_queue, &events2);
+
+        if (events2.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch (events2.keyboard.keycode) {
+                case ALLEGRO_KEY_ENTER:
+                    on = true;
+                    break;
+                case ALLEGRO_KEY_DOWN:
+                    if (operation != 3)
+                        operation++;
+                    break;
+                case ALLEGRO_KEY_UP:
+                    if (operation != 1)
+                        operation--;
+                    break;
+            }
+        }
+        if (events2.type == ALLEGRO_EVENT_TIMER) {
+            if(events2.timer.source == menuTimer) {
+                al_clear_to_color(al_map_rgb(62, 240, 98));
+                al_draw_bitmap(titule, 0, 0, 0);
+                al_draw_filled_rectangle(0, 300 + 100 * (operation - 1), 300, 300 + 100 * operation, al_map_rgb(255, 255, 255));
+                al_draw_bitmap(option, 0, 0, 0);
+                al_flip_display();
+            }
+        }
+
+
+    }
+
+    Game *game = new Game(operation);
 
     while (!running){
         al_play_sample_instance(IntroInstance);
@@ -93,7 +131,6 @@ int main(int argc, char **argv){
         {
             if (events.timer.source == timer) {
                 //Still playing
-                cout << game->getState() << endl;
                 if (game->getState() == 0) {
                     // Update
                     game->update();

@@ -5,7 +5,7 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Game::Game() {
+Game::Game(int difficulty) {
     playersList = new LinkedList<Player *>;
     enemyList = new LinkedList<Enemy *>;
     swordList = new LinkedList<Sword *>;
@@ -21,9 +21,10 @@ Game::Game() {
     icon3 = al_load_bitmap("../resources/icon3.png");
     icon4 = al_load_bitmap("../resources/icon4.png");
 
-    generic->CreaOleadas(1);
+    generic->CreaOleadas(difficulty);
     animationTimer = 0;
     currentAttack = 3;
+    dificultad = difficulty;
     defeated = 0;
     level = 1;
     x = 0;
@@ -249,9 +250,7 @@ void Game::updateLevel4(int x, int y, bool arr, bool aba, bool der, bool izq) {
             } else {
                 matrizFinal[ym][xm] = 0;
             }
-            cout << matrizFinal[ym][xm] << ", ";
         }
-        cout << endl;
     }
     generadorGrafo genGrafo;
     Grafo grafo = genGrafo.generarGrafo(matrizFinal);
@@ -280,7 +279,6 @@ void Game::updateLevel4(int x, int y, bool arr, bool aba, bool der, bool izq) {
                 column--;
         }
     }
-    cout << "Termina de buscar" << endl;
 }
 
 void Game::movement1() {
@@ -320,7 +318,8 @@ void Game::movement2() {
         if (playersList->get(i)->aIndex < playersList->get(i)->getAstar().size()) {
             nextX = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].x * 50;
             nextY = playersList->get(i)->getAstar()[playersList->get(i)->aIndex].y * 50;
-        } else {
+        }
+        else {
             nextX = playersList->get(i)->getPosx() * 50;
             nextY = playersList->get(i)->getPosy() * 50;
         }
@@ -369,11 +368,9 @@ void Game::movement4() {
         int nextX, nextY;
         map[playersList->get(i)->getPosy()][playersList->get(i)->getPosx()] = 0;
 
-        cout << "Length: " << playersList->get(i)->prim.getLenght() << endl;
         if (playersList->get(i)->prim.getLenght() != 0) {
             nextX = playersList->get(i)->prim.head->data.second * 50;
             nextY = playersList->get(i)->prim.head->data.first * 50;
-            cout << "NextX: " << nextX << "    NextY: " << nextY << endl;
             playersList->get(i)->prim.pop();
         }
         else {
@@ -605,7 +602,6 @@ void Game::drawMap() {
 void Game::createFirstMap() {
     std::srand(std::time(0));
     int random, enemys = 0, players = 0;
-    cout << "Level: " << level << "\n" << endl;
     enemyList = generic->ListaDeEnemigos("../resources/enemy1.png", level - 1);
     for (int dj = 0; dj < 21; dj++) {
         for (int di = 0; di < 27; di++) {
@@ -623,7 +619,7 @@ void Game::createFirstMap() {
                 map[dj][di] = 0;
             }
             //Cantidad de enemigos.         aqui
-            else if(random > 95 && enemys != 5 && dj != 0) {
+            else if(random > 95 && enemys != 5 * dificultad && dj != 0) {
                 map[dj][di] = 3;
                 //enemyList->add(new Enemy(di, dj, "../resources/enemy1.png"));
                 enemyList->get(enemys)->update(di, dj);
@@ -653,7 +649,6 @@ void Game::createNextMap() {
         enemyList->clear();
         laserList->clear();
     }
-    cout << "Level: " << level << "\n" << endl;
     enemyList = generic->ListaDeEnemigos("../resources/enemy" + to_string(level) + ".png", level - 1);
 
     std::srand(std::time(0));
@@ -667,7 +662,7 @@ void Game::createNextMap() {
                 map[j][i] = 0;
             }
             //Cantidad de enemigos.         aqui
-            else if (random > 95 && enemys != 5 && j != 0) {
+            else if (random > 95 && enemys != 5 * dificultad && j != 0) {
                 map[j][i] = 3;
                 enemyList->get(enemys)->update(i, j);
                 enemys += 1;
@@ -697,7 +692,6 @@ void Game::setCurrentAttack(int current) {
             }
         }
         currentAttack = current;
-        cout << "Ataque actual: " << currentAttack << endl;
     }
 }
 

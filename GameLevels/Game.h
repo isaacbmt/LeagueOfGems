@@ -32,9 +32,9 @@ private:
     int map[21][27];
     int animationTimer;
     int currentAttack;
-    int numero_oleada;
-    int level;
+    int dificultad;
     int defeated;
+    int level;
     int x;
     int y;
 
@@ -64,7 +64,7 @@ private:
     void deleteObjectInGame();
 
 public:
-    Game();//Hice un cambio en este metodo
+    Game(int dificultad);//Hice un cambio en este metodo
     void updateCenter(int, int);//Añadi este metodo para definir el centro d calculo para pathfinding
     void update();//Y en este metodo tambien
     void draw();
