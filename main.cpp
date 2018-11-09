@@ -4,6 +4,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 #include <iostream>
 #include "GameLevels/Game.h"
@@ -35,6 +37,9 @@ int main(int argc, char **argv){
     }
 
     al_set_window_position(display, 600, 300);
+
+    al_init_font_addon();
+    al_init_ttf_addon();
 
     al_init_image_addon();
     al_init_primitives_addon();

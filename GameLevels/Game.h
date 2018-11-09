@@ -11,6 +11,8 @@
 #include "../Characters/Laser.h"
 #include "../Characters/Gem.h"
 #include "../DataStructures/AlgoritmoGen.h"
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 class Game {
 private:
@@ -23,12 +25,14 @@ private:
     LinkedList<Gem *> *gemList;
     AlgoritmoGen *generic;
 
+    ALLEGRO_FONT *font;
     ALLEGRO_BITMAP *tiles;
+    ALLEGRO_BITMAP *warning;
     ALLEGRO_BITMAP *icon1;
     ALLEGRO_BITMAP *icon2;
     ALLEGRO_BITMAP *icon3;
-    ALLEGRO_BITMAP *icon4;
 
+    bool enemyNear;
     int map[21][27];
     int animationTimer;
     int currentAttack;
@@ -62,6 +66,7 @@ private:
 
     void drawAttackIcons();
     void deleteObjectInGame();
+    void searchEnemysNear();
 
 public:
     Game(int dificultad);//Hice un cambio en este metodo

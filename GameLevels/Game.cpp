@@ -19,9 +19,11 @@ Game::Game(int difficulty) {
     icon1 = al_load_bitmap("../resources/icon1.png");
     icon2 = al_load_bitmap("../resources/icon2.png");
     icon3 = al_load_bitmap("../resources/icon3.png");
-    icon4 = al_load_bitmap("../resources/icon4.png");
+    warning = al_load_bitmap("../resources/warning.png");
+    font = al_load_font("../resources/diablo_h.ttf", 50, 0);
 
     generic->CreaOleadas(difficulty);
+    enemyNear = false;
     animationTimer = 0;
     currentAttack = 3;
     dificultad = difficulty;
@@ -88,6 +90,7 @@ void Game::update() {
             break;
     }
     deleteObjectInGame();
+    searchEnemysNear();
 
     if (playersList->length() == 0) {
         defeated = 1;
@@ -354,7 +357,6 @@ void Game::movement3() {
             nextX = playersList->get(i)->getPosx() * 50;
             nextY = playersList->get(i)->getPosy() * 50;
         }
-
         if(nextX != -50) {
             playersList->get(i)->update(nextX, nextY);
         }
@@ -430,8 +432,52 @@ void Game::attack1() {
     }
 }
 
+void Game::searchEnemysNear() {
+    int playerX;
+    int playerY;
+    bool found = false;
+    for (int i = 0; i < playersList->length(); i++) {
+        for (int j = 0; j < enemyList->length(); j++) {
+            playerX = playersList->get(i)->getPosx();
+            playerY = playersList->get(i)->getPosy();
+
+            for (int k = 0; k < 5; k++) {
+                if (map[playerY][playerX - (k + 1)] == 3) {
+                    enemyNear = true;
+                    found = true;
+                    break;
+                }
+                else if (map[playerY][playerX + k] == 3) {
+                    enemyNear = true;
+                    found = true;
+                    break;
+                }
+                else if (map[playerY + k][playerX] == 3) {
+                    enemyNear = true;
+                    found = true;
+                    break;
+                }
+                else if (map[playerY - (k + 1)][playerX] == 3) {
+                    enemyNear = true;
+                    found = true;
+                    break;
+                }
+                else {
+                    enemyNear = false;
+                }
+            }
+            if (found) {
+                break;
+            }
+        }
+        if (found) {
+            break;
+        }
+    }
+}
+
 void Game::attack2() {
-    for (int r = 0; r < playersList->length(); ++r) {
+    for (int r = 0; r < playersList->length(); r++) {
         for (int i = 0; i < enemyList->length(); i++) {
             int playerY = playersList->get(r)->getPosy();
             int playerX = playersList->get(r)->getPosx();
@@ -548,6 +594,23 @@ void Game::draw() {
     for (int g = 0; g < level; g++) {
         gemList->get(g)->draw();
     }
+
+    if (enemyNear) {
+        al_draw_bitmap(warning, 619, 525, 0);
+    }
+    if (level == 1) {
+        al_draw_text(font, al_map_rgb(255, 255, 255), 1150, 1050, ALLEGRO_ALIGN_CENTER, "Dijkstra");
+    }
+    else if (level == 2) {
+        al_draw_text(font, al_map_rgb(255, 255, 255), 1150, 1050, ALLEGRO_ALIGN_CENTER, "A*");
+    }
+    else if (level == 3) {
+        al_draw_text(font, al_map_rgb(255, 255, 255), 1150, 1050, ALLEGRO_ALIGN_CENTER, "Kruskal");
+    }
+    if (level == 4) {
+        al_draw_text(font, al_map_rgb(255, 255, 255), 1150, 1050, ALLEGRO_ALIGN_CENTER, "PRIM");
+    }
+
 }
 
 void Game::drawAttackIcons() {
@@ -557,7 +620,6 @@ void Game::drawAttackIcons() {
     al_draw_bitmap(icon1, 525, 1070, 0);
     al_draw_bitmap(icon2, 605, 1070, 0);
     al_draw_bitmap(icon3, 685, 1070, 0);
-    al_draw_bitmap(icon4, 765, 1070, 0);
 }
 
 void Game::drawMap() {
@@ -774,5 +836,5 @@ Game::~Game(){
     al_destroy_bitmap(icon1);
     al_destroy_bitmap(icon2);
     al_destroy_bitmap(icon3);
-    al_destroy_bitmap(icon4);
+    al_destroy_font(font);
 }
